@@ -5,6 +5,11 @@
         <meta name="language" content="en" />
         <title>P7PP - P7 Personal Pages</title>
         <link rel="stylesheet" href="/static/pp.css" />
+    </head>
+    <body>
+        <input type="text" id="q" placeholder="..." />
+        <ul id="suggs" class="suggestions"></ul>
+
         <script type="x-template" id="sgtpl">
         {% raw %}
         {{#people}}
@@ -18,10 +23,6 @@
         </script>
         <script src="/static/mustache.min.js"></script>
         <script src="/static/pp.js"></script>
-    </head>
-    <body>
-        <input type="text" id="q" placeholder="..." />
-        <ul id="suggs" class="suggestions"></ul>
     </body>
 </html>
 
