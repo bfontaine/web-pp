@@ -7,4 +7,4 @@ all: deploy
 
 deploy:
 	git push
-	h run python scheduler.py
+	heroku run python scheduler.py
