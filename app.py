@@ -12,4 +12,4 @@ def index():
 
 @app.route('/people.json')
 def people_json():
-    return redis.get('people.json')
+    return redis.get('people.json') or '[]'
