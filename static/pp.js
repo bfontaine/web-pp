@@ -37,6 +37,8 @@
                         results.push(_people[i][1]);
                     }
                 }
+
+                return results;
             },
 
             people: function() {
