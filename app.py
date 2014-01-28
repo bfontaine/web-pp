@@ -13,4 +13,4 @@ def index():
 @app.route('/json')
 def people_json():
     resp = redis.get('people.json') or '[]'
-    return Response(response=resp, status=200, mimetype='application/json')
+    return Response(resp, 200, mimetype='application/json')
