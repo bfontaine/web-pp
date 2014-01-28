@@ -79,8 +79,10 @@
     }
 
     var updateSuggestions = (function() {
-        var tpl  = Mustache.parse(document.getElementById('sgtpl').innerHTML),
+        var tpl  = document.getElementById('sgtpl').innerHTML,
             root = document.getElementById('suggs');
+
+        Mustache.parse(tpl);
 
         return function( people ) {
             var html = Mustache.render(tpl, { people: people });
