@@ -54,7 +54,7 @@
                     cb(xmlhttp.responseText);
                 }
             }
-            xmlhttp.open('GET', '/static/people.json', true);
+            xmlhttp.open('GET', '/people.json', true);
             xmlhttp.send();
         }
 

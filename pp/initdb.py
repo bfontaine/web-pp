@@ -13,13 +13,11 @@ people.json.
 import re
 import os
 import json
+from store import redis
 from bs4 import BeautifulSoup
 from unidecode import unidecode
 from urllib2 import urlopen
 from urlparse import urljoin
-
-DIR=os.path.dirname(os.path.realpath(__file__))
-JSON_LIST=DIR+'/../static/people.json'
 
 def fmt_phone(ph):
     """
@@ -160,6 +158,4 @@ def parse_all():
     return parse_liafa()+parse_pps()+parse_gallium()+parse_others()
 
 def save_list():
-    f = open(JSON_LIST, 'w')
-    f.write(json.dumps(parse_all()))
-    f.close()
+    redis.set('people.json', json.dumps(parse_all()))
