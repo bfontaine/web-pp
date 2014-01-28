@@ -5,8 +5,21 @@
         <meta name="language" content="en" />
         <title>P7PP - P7 Personal Pages</title>
         <link rel="stylesheet" href="/static/pp.css" />
+        <script type="x-template" id="sgtpl">
+        {{#people}}
+        <li class="people-container">
+        <a href="{{icon}}" class="people">
+        <img src="/static/icons/{{icon}}" class="icon" />
+        <p><b class="name">{{name}}</b><span class="details">{{info}}</span></p>
+        </a></li>
+        {{/people}}
+        </script>
+        <script src="/static/mustache.min.js"></script>
         <script src="/static/pp.js"></script>
     </head>
-    <body>Hello!</body>
+    <body>
+        <input type="text" id="q" placeholder="..." />
+        <ul id="suggs" class="suggestions"></ul>
+    </body>
 </html>
 

@@ -60,7 +60,7 @@
                     cb(xmlhttp.responseText);
                 }
             }
-            xmlhttp.open('GET', '/people.json', true);
+            xmlhttp.open('GET', '/json', true);
             xmlhttp.send();
         }
 
@@ -78,6 +78,15 @@
         return cb(localStorage.getItem('pp.people'));
     }
 
+    var updateSuggestions = (function() {
+        var tpl  = Mustache.parse(document.getElementById('sgtpl').innerHTML),
+            root = document.getElementsById('suggs');
+
+        return function( people ) {
+            var html = tpl.render(tpl, { people: people });
+        };
+    })();
+
     loadPeopleJSON(function( data ) {
         var people = JSON.parse(data);
 
@@ -86,8 +95,8 @@
         // code here
 
         // debug
-        window._people = people;
         window._fuzzy = fuzzy;
+        window._up = updateSuggestions;
     });
 
 })();
