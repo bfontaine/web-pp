@@ -19,7 +19,7 @@ from urllib2 import urlopen
 from urlparse import urljoin
 
 DIR=os.path.dirname(os.path.realpath(__file__))
-JSON_LIST=DIR+'../static/people.json'
+JSON_LIST=DIR+'/../static/people.json'
 
 def fmt_phone(ph):
     """
