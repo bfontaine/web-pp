@@ -1,21 +1,7 @@
 (function() {
-    // fuzzy matching
-    var fuzzy = (function() {
+    var searchEngine = (function() {
         var _people = [],
-            _people_count = 0,
-            _cache = {},
-            fuzzyCache = function( str ) {
-                var reg;
-
-                if (_cache.hasOwnProperty(str)) {
-                    return _cache[str];
-                }
-
-                var reg = new RegExp(
-                        str.replace(/\W/, '').split('').join('\\w*'), 'i');
-
-                return _cache[str] = reg;
-            };
+            _people_count = 0;
 
         return {
             populate: function( people ) {
@@ -30,10 +16,8 @@
             match: function( str ) {
                 var results = [];
 
-                reg = fuzzyCache( str );
-
                 for (var i=0; i<_people_count; i++) {
-                    if (reg.test(_people[i][0])) {
+                    if (_people[i][0].indexOf(str) != -1) {
                         results.push(_people[i][1]);
                     }
                 }
@@ -87,7 +71,7 @@
         return function( query ) {
             // inefficient but ok for now
             root.innerHTML = Mustache.render(tpl, {
-                people: fuzzy.match(query)
+                people: searchEngine.match(query)
             });
         };
     })();
@@ -96,15 +80,11 @@
         var people = JSON.parse(data),
             q      = document.getElementById('q');
 
-        fuzzy.populate(people);
+        searchEngine.populate(people);
 
         q.addEventListener('keypress', function() {
             updateSuggestions(q.value);
         }, false);
-
-        // debug
-        window._fuzzy = fuzzy;
-        window._up = updateSuggestions;
     });
 
 })();
