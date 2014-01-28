@@ -7,4 +7,5 @@ gunicorn==18.0
 itsdangerous==0.23
 lxml==3.3.0
 newrelic==2.10.1.9
+redis==2.9.1
 wsgiref==0.1.2
