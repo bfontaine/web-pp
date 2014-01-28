@@ -69,7 +69,7 @@
             return asyncLoad();
         }
 
-        return localStorage.getItem('pp.people');
+        return cb(localStorage.getItem('pp.people'));
     }
 
     loadPeopleJSON(function( data ) {
