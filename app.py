@@ -1,6 +1,5 @@
 # -*- coding: UTF-8 -*-
 
-import pp
 import os
 from flask import Flask
 
