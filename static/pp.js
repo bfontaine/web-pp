@@ -83,7 +83,7 @@
             root = document.getElementById('suggs');
 
         return function( people ) {
-            var html = tpl.render(tpl, { people: people });
+            var html = Mustache.render(tpl, { people: people });
         };
     })();
 
