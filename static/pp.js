@@ -84,17 +84,23 @@
 
         Mustache.parse(tpl);
 
-        return function( people ) {
-            var html = Mustache.render(tpl, { people: people });
+        return function( query ) {
+            // inefficient but ok for now
+            root.innerHTML = Mustache.render(tpl, {
+                people: fuzzy.match(query)
+            });
         };
     })();
 
     loadPeopleJSON(function( data ) {
-        var people = JSON.parse(data);
+        var people = JSON.parse(data),
+            q      = document.getElementById('q');
 
         fuzzy.populate(people);
 
-        // code here
+        q.addEventListener('keypress', function() {
+            updateSuggestions(q.value);
+        }, false);
 
         // debug
         window._fuzzy = fuzzy;
