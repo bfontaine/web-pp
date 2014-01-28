@@ -1,4 +1,6 @@
 (function() {
+    var MAX_RESULTS = 20;
+
     // fuzzy matching
     var fuzzy = (function() {
         var _people = [],
@@ -27,13 +29,16 @@
             },
 
             match: function( str ) {
-                var results = [];
+                var results = [], cpt=0;
 
                 reg = fuzzyCache( str );
 
                 for (var i=0; i<_people_count; i++) {
                     if (reg.test(_people[i][0])) {
                         results.push(_people[i][1]);
+                        if (++cpt >= MAX_RESULTS) {
+                            break;
+                        }
                     }
                 }
 
