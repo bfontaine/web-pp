@@ -80,7 +80,7 @@
 
     var updateSuggestions = (function() {
         var tpl  = Mustache.parse(document.getElementById('sgtpl').innerHTML),
-            root = document.getElementsById('suggs');
+            root = document.getElementById('suggs');
 
         return function( people ) {
             var html = tpl.render(tpl, { people: people });
