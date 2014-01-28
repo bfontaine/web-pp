@@ -77,7 +77,7 @@ def parse_liafa():
     base = 'http://www.liafa.univ-paris-diderot.fr/'
     tr_sel = 'blockquote > table tr.fondgristresc' # td:first-child a'
     souper = soup_url(urljoin(base, '/web9/membreliafa/listalpha_fr.php'))
-    for tr in page.select(tr_sel):
+    for tr in souper.select(tr_sel):
         links = tr.select('td a')
         if (len(links) == 0):
             continue
@@ -91,11 +91,11 @@ def parse_liafa():
             p['info'] = 'Office ' + text(tds[1]) \
                       + ', phone: ' + fmt_phone(text(tds[0]))
         souper = soup_url(base + u)
-        pp = page.select('table.texte li a.bleu')
+        pp = souper.select('table.texte li a.bleu')
         if (pp):
             pp = pp[0]
             p['url'] = urljoin(base, pp.get('href'))
-            p['name'] = fmt_name(text(page.select('blockquote h2')[0]))
+            p['name'] = fmt_name(text(souper.select('blockquote h2')[0]))
             p['icon'] = icon
             p['fuzzy'] = mk_fuzzy(p)
             people_list.append(p)
@@ -111,7 +111,7 @@ def parse_pps():
     people_list = []
     base = 'http://www.pps.univ-paris-diderot.fr'
     souper = soup_url(base + '/membres')
-    trs = page.select('#contenu2 table')[0].find_all('tr')[1:]
+    trs = souper.select('#contenu2 table')[0].find_all('tr')[1:]
 
     for tr in trs:
         link = tr.find('a')
@@ -141,7 +141,7 @@ def parse_gallium():
     people_list = []
     base = 'http://gallium.inria.fr'
     souper = soup_url(base + '/members.html')
-    links = page.select('#columnA_2columns a')
+    links = souper.select('#columnA_2columns a')
     for link in links:
         p = { 'name': text(link), 'url': urljoin(base, link.get('href')) }
         p['icon'] = icon
