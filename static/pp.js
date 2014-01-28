@@ -12,7 +12,7 @@
                 }
 
                 var reg = new RegExp(
-                        str.replace(/\W/, '').split('').join('\\w*'));
+                        str.replace(/\W/, '').split('').join('\\w*'), 'i');
 
                 return _cache[str] = reg;
             };
