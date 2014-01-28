@@ -37,6 +37,10 @@
                         results.push(_people[i][1]);
                     }
                 }
+            },
+
+            people: function() {
+                return _people;
             }
         };
     })();
