@@ -2,7 +2,7 @@
 
 import os
 from pp.store import redis
-from flask import Flask, render_template
+from flask import Flask, Response, render_template
 
 app = Flask(__name__)
 
