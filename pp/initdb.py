@@ -1,19 +1,25 @@
 # -*- coding: utf-8 -*-
 """
 This module provide utilities to update the local list of people. This list is
-stored as JSON in people.json, and each person is a dict with these keys:
-'name' (the person name), 'url' (its personal page URL), 'icon' (an icon
+stored as JSON in /static/people.json, and each person is a dict with these
+keys: 'name' (the person name), 'url' (its personal page URL), 'icon' (an icon
 path), 'info' (more info about this person; may be empty), and an optional key,
 'fuzzy', which can be used for fuzzy matching.
+
+.save_list should be called each day/week/month by a scheduler to update
+people.json.
 """
 
 import re
-import alp
-from alp import Request
+import os
+import json
+from bs4 import BeautifulSoup
 from unidecode import unidecode
+from urllib2 import urlopen
 from urlparse import urljoin
 
-JSON_LIST='people.json'
+DIR=os.path.dirname(os.path.realpath(__file__))
+JSON_LIST=DIR+'../static/people.json'
 
 def fmt_phone(ph):
     """
@@ -52,20 +58,25 @@ def mk_fuzzy(p):
     if sig:
         els.append(sig)
 
+    # join with non-\w symbol to avoid cross-matching
     return ' # '.join(els)
+
+def soup_url(url):
+    """
+    Get an HTML document from an URL, and return its (beautiful) soup
+    """
+    html = urlopen(url).read()
+    return BeautifulSoup(html, "lxml")
 
 def parse_liafa():
     """
     Return a list of people from LIAFA.
     """
-    alp.log('parsing liafa')
     icon = 'liafa.png'
     people_list = []
     base = 'http://www.liafa.univ-paris-diderot.fr/'
     tr_sel = 'blockquote > table tr.fondgristresc' # td:first-child a'
-    page = Request(urljoin(base, '/web9/membreliafa/listalpha_fr.php'))
-    page.download()
-    page = page.souper()
+    souper = soup_url(urljoin(base, '/web9/membreliafa/listalpha_fr.php'))
     for tr in page.select(tr_sel):
         links = tr.select('td a')
         if (len(links) == 0):
@@ -79,9 +90,7 @@ def parse_liafa():
         if len(tds) >= 2:
             p['info'] = 'Office ' + text(tds[1]) \
                       + ', phone: ' + fmt_phone(text(tds[0]))
-        page = Request(base + u)
-        page.download()
-        page = page.souper()
+        souper = soup_url(base + u)
         pp = page.select('table.texte li a.bleu')
         if (pp):
             pp = pp[0]
@@ -91,7 +100,6 @@ def parse_liafa():
             p['fuzzy'] = mk_fuzzy(p)
             people_list.append(p)
 
-    alp.log('done liafa')
     return people_list
 
 
@@ -99,13 +107,10 @@ def parse_pps():
     """
     Return a list of people from PPS
     """
-    alp.log('parsing pps')
     icon = 'pps.png'
     people_list = []
     base = 'http://www.pps.univ-paris-diderot.fr'
-    page = Request(base + '/membres')
-    page.download()
-    page = page.souper()
+    souper = soup_url(base + '/membres')
     trs = page.select('#contenu2 table')[0].find_all('tr')[1:]
 
     for tr in trs:
@@ -125,7 +130,6 @@ def parse_pps():
 
         people_list.append(p)
 
-    alp.log('done pps')
     return people_list
 
 def parse_gallium():
@@ -133,13 +137,10 @@ def parse_gallium():
     Return a list of people from Gallium. Only a part of them are teaching
     at Paris Diderot.
     """
-    alp.log('parsing gallium')
     icon = 'inria.png'
     people_list = []
     base = 'http://gallium.inria.fr'
-    page = Request(base + '/members.html')
-    page.download()
-    page = page.souper()
+    souper = soup_url(base + '/members.html')
     links = page.select('#columnA_2columns a')
     for link in links:
         p = { 'name': text(link), 'url': urljoin(base, link.get('href')) }
@@ -147,31 +148,18 @@ def parse_gallium():
         p['fuzzy'] = mk_fuzzy(p)
         people_list.append(p)
 
-    alp.log('done gallium')
     return people_list
 
 def parse_others():
     """
     Return a list of manually-added people
     """
-    alp.log('parsing others')
-    li = alp.jsonLoad(alp.local('others.json'), [])
-    for p in li:
-        if 'fuzzy' not in p:
-            p['fuzzy'] = mk_fuzzy(p)
-    alp.log('done others')
-    return li
+    return []
 
 def parse_all():
     return parse_liafa()+parse_pps()+parse_gallium()+parse_others()
 
 def save_list():
-    p = parse_all()
-    alp.jsonDump(p, JSON_LIST)
-    return p
-
-def get_list():
-    li = alp.jsonLoad(JSON_LIST, default=[])
-    if len(li) == 0:
-        return save_list()
-    return li
+    f = open(JSON_LIST, 'w')
+    f.write(json.dumps(parse_all()))
+    f.close()
