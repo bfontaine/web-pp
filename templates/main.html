@@ -4,14 +4,15 @@
         <meta charset="utf-8" />
         <meta name="language" content="en" />
         <title>P7PP - P7 Personal Pages</title>
-        <link rel="stylesheet" href="/static/pp.css" />
+        {% assets "css_all" %}
+        <link rel="stylesheet" href="{{ ASSET_URL }}" />
+        {% endassets %}
         <link rel="icon" type="image/png" href="/static/icons/app.png" />
         <link rel="apple-touch-icon"      href="/static/icons/app.png" />
     </head>
     <body>
-        <input type="text" id="q" autocomplete="false" />
+        <input type="text" id="q" autocomplete="off" />
         <ul id="suggs" class="suggestions"></ul>
-
         <script type="x-template" id="sgtpl">
         {% raw %}
         {{#people}}
@@ -24,8 +25,9 @@
         {{/people}}
         {% endraw %}
         </script>
-        <script src="/static/mustache.min.js"></script>
-        <script src="/static/pp.js"></script>
+        {% assets "js_all" %}
+        <script src="{{ ASSET_URL }}"></script>
+        {% endassets %}
     </body>
 </html>
 

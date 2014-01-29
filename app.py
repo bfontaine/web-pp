@@ -3,8 +3,17 @@
 import os
 from pp.store import redis
 from flask import Flask, Response, render_template, request
+from flask.ext.assets import Environment, Bundle
 
 app = Flask(__name__)
+
+## assets
+assets = Environment(app)
+js = Bundle('mustache.min.js', 'pp.js', filters='jsmin', output='pp.min.js')
+assets.register('js_all', js)
+
+css = Bundle('pp.css', filters='cssmin', output='pp.min.css')
+assets.register('css_all', css)
 
 @app.route('/')
 def index():
