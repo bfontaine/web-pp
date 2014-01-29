@@ -25,6 +25,8 @@
                 var l1 = str1.length, l2 = str2.length,
                     v0, v1, i, j, cost;
 
+                str1 = str1.toLocaleLowerCase();
+
                 // we don't even try on little strings
                 if (l1 < 4) { return 10; }
 
@@ -65,7 +67,7 @@
                 people.forEach(function(p) {
                     var str = p.fuzzy || p.name;
 
-                    _people.push([str, p])
+                    _people.push([str.toLocaleLowerCase(), p])
                 });
                 _people_count = _people.length;
             },
@@ -144,8 +146,12 @@
     loadPeopleJSON(function( data ) {
         var people = JSON.parse(data),
             q      = document.getElementById('q'),
-            up     = function() {
-                updateSuggestions(q.value.length > 0 ? q.value : null);
+            up     = function( e ) {
+
+                var query = q.value +
+                                String.fromCharCode(e.charCode || e.keyCode);
+
+                updateSuggestions(query > 0 ? query : null);
             };
 
         fuzzy.populate(people);
