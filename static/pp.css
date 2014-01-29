@@ -11,9 +11,18 @@ html, body {
     font-family: helvetica, arial, sans-serif;
 }
 
+.suggestions {
+    list-style-type: none;
+}
+
 .people .icon {
     max-width: 50px;
     max-height: 50px;
+}
+
+.people .icon,
+.people .info {
+    display: inline-block;
 }
 
 .people .name,
