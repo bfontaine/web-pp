@@ -1,5 +1,6 @@
 (function() {
-    var MAX_RESULTS = 20;
+    var MAX_RESULTS = 20,
+        MAX_LEVENSHTEIN = 2,
 
     // fuzzy matching
     var fuzzy = (function() {
@@ -16,6 +17,44 @@
                 var reg = new RegExp(str.replace(/\W/, ''), 'i');
 
                 return _cache[str] = reg;
+            },
+            // from http://bit.ly/levenshtein-wikipedia
+            // the first string should be user input while the second should
+            // be the compared string
+            levenshtein = function( str1, str2 ) {
+                var l1 = str1.length, l2 = str2.length,
+                    v0, v1, i, j, cost;
+
+                if (str1 == str2) { return 0; }
+                if (l1 == 0) { return l2; }
+                if (l2 == 0) { return l1; }
+
+                v0 = [];
+                v1 = [];
+
+                for (i=0; i<=l2; i++) {
+                    v0[i] = i;
+                }
+
+                for (i=0; i<l1; i++) {
+                    v1[0] = i + 1;
+
+                    for (j=0; j<l2; j++) {
+                        cost = str1[i] == str2[j] ? 0 : 1;
+                        v1[j+1] = Math.min(v1[j] + 1, v0[j+1]+1, v0[j] + cost);
+                    }
+
+                    v0 = v1;
+                }
+
+                cost = v1[l2];
+
+                // added because "foobarfoobar" should not match "foo"
+                if (l1 > l2) {
+                    cost += l1 - l2;
+                }
+
+                return cost;
             };
 
         return {
@@ -29,12 +68,14 @@
             },
 
             match: function( str ) {
-                var results = [], cpt=0;
+                var results = [], cpt=0, i, pstr;
 
                 reg = fuzzyCache( str );
 
-                for (var i=0; i<_people_count; i++) {
-                    if (reg.test(_people[i][0])) {
+                for (i=0; i<_people_count; i++) {
+                    pstr = _people[i][0];
+                    if (reg.test(pstr)
+                            || levenshtein(str, pstr) < MAX_LEVENSHTEIN) {
                         results.push(_people[i][1]);
                         if (++cpt >= MAX_RESULTS) {
                             break;
@@ -98,13 +139,13 @@
 
     loadPeopleJSON(function( data ) {
         var people = JSON.parse(data),
-            q      = document.getElementById('q');
+            q      = document.getElementById('q'),
+            up     = function() { updateSuggestions(q.value); };
 
         fuzzy.populate(people);
 
-        q.addEventListener('keypress', function() {
-            updateSuggestions(q.value);
-        }, false);
+        q.addEventListener('keypress', up, false);
+        q.addEventListener('keydown', up, false);
 
         // debug
         window._fuzzy = fuzzy;
