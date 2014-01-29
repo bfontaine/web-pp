@@ -25,6 +25,9 @@
                 var l1 = str1.length, l2 = str2.length,
                     v0, v1, i, j, cost;
 
+                // we don't even try on little strings
+                if (l1 < 4) { return 10; }
+
                 if (str1 == str2) { return 0; }
                 if (l1 == 0) { return l2; }
                 if (l2 == 0) { return l1; }
