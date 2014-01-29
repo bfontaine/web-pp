@@ -148,6 +148,8 @@
             q      = document.getElementById('q'),
             up     = function( e ) {
 
+                // there's an issue here if the user type in the middle of the
+                // word.
                 var query = q.value +
                                 String.fromCharCode(e.charCode || e.keyCode);
 
@@ -158,10 +160,6 @@
 
         q.addEventListener('keypress', up, false);
         q.addEventListener('keydown', up, false);
-
-        // debug
-        window._fuzzy = fuzzy;
-        window._up = updateSuggestions;
     });
 
 })();
