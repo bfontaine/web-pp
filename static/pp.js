@@ -1,13 +1,14 @@
 (function() {
     var Mustache = window.Mustache,
-        MAX_RESULTS = 10,
-        MAX_LEVENSHTEIN = 1;
+        Fuse = window.Fuse,
+        MAX_RESULTS = 10;
 
     // fuzzy matching
     var fuzzy = (function() {
-        var _people = [],
-            _people_count = 0,
-            _cache = {},
+        var _people = [],      // people list
+            _people_count = 0, // people list count
+            _cache = {},       // regex cache for each name
+            _fuse,
             fuzzyCache = function( str ) {
                 var reg;
 
@@ -15,74 +16,37 @@
                     return _cache[str];
                 }
 
-                var reg = new RegExp(str.replace(/\W/, ''), 'i');
+                str = str.replace(/\s+/g, ' ')
+                         .replace(/[^\w ]/g, '');
+
+                var reg = new RegExp(str, 'i');
 
                 return _cache[str] = reg;
-            },
-            // from http://bit.ly/levenshtein-wikipedia
-            // the first string should be user input while the second should
-            // be the compared string
-            levenshtein = function( str1, str2 ) {
-                var l1 = str1.length, l2 = str2.length,
-                    v0, v1, i, j, cost;
-
-                str1 = str1.toLocaleLowerCase();
-
-                // we don't even try on little strings
-                if (l1 < 4) { return 10; }
-
-                if (str1 == str2) { return 0; }
-                if (l1 == 0) { return l2; }
-                if (l2 == 0) { return l1; }
-
-                v0 = [];
-                v1 = [];
-
-                for (i=0; i<=l2; i++) {
-                    v0[i] = i;
-                }
-
-                for (i=0; i<l1; i++) {
-                    v1[0] = i + 1;
-
-                    for (j=0; j<l2; j++) {
-                        cost = str1[i] == str2[j] ? 0 : 1;
-                        v1[j+1] = Math.min(v1[j] + 1, v0[j+1]+1, v0[j] + cost);
-                    }
-
-                    v0 = v1;
-                }
-
-                cost = v1[l2];
-
-                // added because "foobarfoobar" should not match "foo"
-                if (l1 > l2) {
-                    cost += l1 - l2;
-                }
-
-                return cost;
             };
 
         return {
             populate: function( people ) {
-                Object.keys(people).forEach(function(k) {
-                    var p = people[k],
-                        str = p.fuzzy || p.name;
-                    _people.push([str.toLocaleLowerCase(), p])
+                var opts = {};
+                _people = Object.keys(people).map(function(k) {
+                    return people[k];
                 });
                 _people_count = _people.length;
+
+                opts['keys'] = [ 'name' ];
+                opts['distance'] = 12;
+                opts['threshold'] = 0.0;
+
+                _fuse = new Fuse(_people, opts);
             },
 
             match: function( str ) {
-                var results = [], cpt=0, i, pstr, p;
+                var results = [], cpt=0, i, p;
 
                 reg = fuzzyCache( str );
 
                 for (i=0; i<_people_count; i++) {
-                    pstr = _people[i][0];
-                    p    = _people[i][1];
-                    if (reg.test(pstr)
-                            || levenshtein(str, p.name) <= MAX_LEVENSHTEIN) {
+                    p = _people[i];
+                    if (reg.test(p['fuzzy'] || p['name'])) {
                         results.push(p);
                         if (++cpt >= MAX_RESULTS) {
                             break;
@@ -90,11 +54,14 @@
                     }
                 }
 
-                return results;
-            },
+                // if the regex test doesn't give any result, fallback to
+                // fuzzy search
+                if (results.length == 0 && str.length < 32) {
+                    console.log("fallback to fuzzy search");
+                    return _fuse.search(str);
+                }
 
-            people: function() {
-                return _people;
+                return results;
             }
         };
     })();
@@ -167,8 +134,13 @@
     loadPeopleJSON(function( data ) {
         var people = JSON.parse(data),
             q      = document.getElementById('q'),
+            prev_q = '',
             up     = function( e ) {
-                updateSuggestions(q.value.length > 0 ? q.value : null);
+                var query = q.value;
+                if (query != prev_q) {
+                    updateSuggestions(query ? query : null);
+                }
+                prev_q = query;
             };
 
         fuzzy.populate(people);
@@ -176,7 +148,7 @@
         q.addEventListener('keyup', up, false);
 
         // click feedback
-        document.body.addEventListener('click', function( e ) {
+        document.body.addEventListener('mousedown', function( e ) {
             var el = e.target || e.srcElement,
                 tag = el.tagName.toLocaleLowerCase();
 

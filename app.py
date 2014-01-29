@@ -19,7 +19,7 @@ app = Flask(__name__)
 
 ## assets
 assets = Environment(app)
-js = Bundle('mustache.min.js', 'pp.js', \
+js = Bundle('mustache.min.js', 'fuse.js', 'pp.js', \
         filters=(iife, 'closure_js'), output='pp.min.js')
 assets.register('js_all', js)
 
@@ -38,13 +38,12 @@ def people_json():
 
 @app.route('/click', methods=['POST'])
 def user_feedback():
-    if request.method == 'POST':
-        query  = request.form['query']
-        result = request.form['key']
+    query  = request.form['query']
+    result = request.form['key']
 
-        if len(query) > 32:
-            return 'too large'
+    if len(query) > 32:
+        return 'too large'
 
-        redis.hincrby(query, result)
-        redis.expire(query, 518400) # 6 days
-        return 'ok'
+    redis.hincrby(query, result)
+    redis.expire(query, 518400) # 6 days
+    return 'ok'
