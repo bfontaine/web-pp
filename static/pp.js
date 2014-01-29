@@ -64,9 +64,9 @@
 
         return {
             populate: function( people ) {
-                people.forEach(function(p) {
-                    var str = p.fuzzy || p.name;
-
+                Object.keys(people).forEach(function(k) {
+                    var p = people[k],
+                        str = p.fuzzy || p.name;
                     _people.push([str.toLocaleLowerCase(), p])
                 });
                 _people_count = _people.length;

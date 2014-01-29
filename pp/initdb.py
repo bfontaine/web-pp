@@ -17,7 +17,7 @@ from store import redis
 from bs4 import BeautifulSoup
 from unidecode import unidecode
 from urllib2 import urlopen
-from urlparse import urljoin
+from urlparse import urljoin, urlparse
 
 def fmt_phone(ph):
     """
@@ -66,12 +66,21 @@ def soup_url(url):
     html = urlopen(url).read()
     return BeautifulSoup(html, "lxml")
 
+def mk_people_key(org, url):
+    """
+    Make a key for a person, using their org and their webpage URL
+    """
+    path = urlparse(url).path
+    m = re.match(r'^/~(\w+)', path)
+    key = m.group(1) if m else re.sub(r'\W', '_', path)
+    return "people.%s.%s" % (org, key)
+
 def parse_liafa():
     """
-    Return a list of people from LIAFA.
+    Return a dict of people from LIAFA.
     """
     icon = 'liafa.png'
-    people_list = []
+    people = {}
     base = 'http://www.liafa.univ-paris-diderot.fr/'
     tr_sel = 'blockquote > table tr.fondgristresc' # td:first-child a'
     souper = soup_url(urljoin(base, '/web9/membreliafa/listalpha_fr.php'))
@@ -99,17 +108,18 @@ def parse_liafa():
             p['name'] = fmt_name(text(souper.select('blockquote h2')[0]))
             p['icon'] = icon
             p['fuzzy'] = mk_fuzzy(p)
-            people_list.append(p)
 
-    return people_list
+            people[mk_people_key('liafa', p['url'])] = p
+
+    return people
 
 
 def parse_pps():
     """
-    Return a list of people from PPS
+    Return a dict of people from PPS
     """
     icon = 'pps.png'
-    people_list = []
+    people = {}
     base = 'http://www.pps.univ-paris-diderot.fr'
     souper = soup_url(base + '/membres')
     trs = souper.select('#contenu2 table')[0].find_all('tr')[1:]
@@ -132,17 +142,17 @@ def parse_pps():
             if office != '-' or phone != '-':
                 p['info'] = 'Office ' + office + ', phone: ' + phone
 
-        people_list.append(p)
+        people[mk_people_key('pps', p['url'])] = p
 
-    return people_list
+    return people
 
 def parse_gallium():
     """
-    Return a list of people from Gallium. Only a part of them are teaching
+    Return a dict of people from Gallium. Only a part of them are teaching
     at Paris Diderot.
     """
     icon = 'inria.png'
-    people_list = []
+    people = {}
     base = 'http://gallium.inria.fr'
     souper = soup_url(base + '/members.html')
     links = souper.select('#columnA_2columns a')
@@ -150,18 +160,26 @@ def parse_gallium():
         p = { 'name': text(link), 'url': urljoin(base, link.get('href')) }
         p['icon'] = icon
         p['fuzzy'] = mk_fuzzy(p)
-        people_list.append(p)
+        people[mk_people_key('gallium', p['url'])] = p
 
-    return people_list
+    return people
 
 def parse_others():
     """
-    Return a list of manually-added people
+    Return a dict of manually-added people
     """
-    return []
+    return {}
 
 def parse_all():
-    return parse_liafa()+parse_pps()+parse_gallium()+parse_others()
+    pp = {}
+    pp.update(parse_liafa())
+    pp.update(parse_pps())
+    pp.update(parse_gallium())
+    pp.update(parse_others())
+    return pp
 
 def save_list():
+    """
+    Save the list of people, as a JSON hash.
+    """
     redis.set('people.json', json.dumps(parse_all()))
