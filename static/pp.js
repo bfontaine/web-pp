@@ -131,6 +131,7 @@
 
         return function( query ) {
             // inefficient but ok for now
+            if (!query) { return root.innerHTML = ''; }
             root.innerHTML = Mustache.render(tpl, {
                 people: fuzzy.match(query)
             });
@@ -140,7 +141,9 @@
     loadPeopleJSON(function( data ) {
         var people = JSON.parse(data),
             q      = document.getElementById('q'),
-            up     = function() { updateSuggestions(q.value); };
+            up     = function() {
+                updateSuggestions(q.value.length > 0 ? q.value : null);
+            };
 
         fuzzy.populate(people);
 
