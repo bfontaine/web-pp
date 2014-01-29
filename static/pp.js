@@ -97,21 +97,35 @@
         };
     })();
 
+    function ajax(opts) {
+        var xmlhttp = new XMLHttpRequest(),
+
+            mth  = opts.method || 'GET',
+            path = opts.path || '/',
+            cb   = opts.callback || function(){},
+            data = opts.data || null;
+
+        xmlhttp.onreadystatechange = function() {
+            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                cb(xmlhttp.responseText);
+            }
+        }
+        xmlhttp.open(mth, path, true);
+        xmlhttp.send(data);
+    }
+
     // load people info
     function loadPeopleJSON( cb ) {
 
         function asyncLoad() {
-            var xmlhttp = new XMLHttpRequest();
-
-            xmlhttp.onreadystatechange = function() {
-                if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+            ajax({
+                path: '/json',
+                callback: function() {
                     localStorage.setItem('pp.people', xmlhttp.responseText);
                     localStorage.setItem('pp.date', Date.now());
                     cb(xmlhttp.responseText);
                 }
-            }
-            xmlhttp.open('GET', '/json', true);
-            xmlhttp.send();
+            });
         }
 
         if (!window.localStorage) { // no support for localStorage
@@ -160,6 +174,24 @@
 
         q.addEventListener('keypress', up, false);
         q.addEventListener('keydown', up, false);
+
+        // click feedback
+        document.body.addEventListener('click', function( e ) {
+            var el = e.target || e.srcElement;
+
+            if (el.tagName.toLocaleLowerCase() == 'a') {
+                var key = el.getAttribute('data-id');
+
+                if (key) {
+                    ajax({
+                        path: '/click',
+                        method: 'POST',
+                        data: 'key='+key+'&query='+q.value
+                    });
+                }
+            }
+
+        }, false);
     });
 
 })();

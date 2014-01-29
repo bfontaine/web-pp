@@ -176,6 +176,8 @@ def parse_all():
     pp.update(parse_pps())
     pp.update(parse_gallium())
     pp.update(parse_others())
+    for k in pp:
+        pp[k]['id'] = k
     return pp
 
 def save_list():
