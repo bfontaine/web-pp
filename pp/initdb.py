@@ -86,8 +86,11 @@ def parse_liafa():
         p = {}
         tds = tr.select('td.texte')
         if len(tds) >= 2:
-            p['info'] = 'Office ' + text(tds[1]) \
-                      + ', phone: ' + fmt_phone(text(tds[0]))
+            p['info'] = ''
+            office = text(tds[1])
+            phone  = fmt_phone(text(tds[0]))
+            if office != '-' or phone != '-':
+                p['info'] = 'Office ' + office + ', phone: ' + phone
         souper = soup_url(base + u)
         pp = souper.select('table.texte li a.bleu')
         if (pp):
@@ -123,8 +126,11 @@ def parse_pps():
 
         tds = tr.find_all('td')
         if (len(tds) >= 4):
-            p['info']  = 'Office ' + text(tds[2]) \
-                       + ', phone: ' + fmt_phone('01 57 27 ' + text(tds[3]))
+            p['info'] = ''
+            office = text(tds[2])
+            phone  = fmt_phone('01 45 27 ' + text(tds[3]))
+            if office != '-' or phone != '-':
+                p['info'] = 'Office ' + office + ', phone: ' + phone
 
         people_list.append(p)
 
