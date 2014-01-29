@@ -1,5 +1,5 @@
 (function() {
-    var MAX_RESULTS = 20,
+    var MAX_RESULTS = 10,
         MAX_LEVENSHTEIN = 1;
 
     // fuzzy matching
