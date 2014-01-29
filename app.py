@@ -10,7 +10,7 @@ app = Flask(__name__)
 
 ## assets
 assets = Environment(app)
-js = Bundle('mustache.min.js', 'pp.js', filters='jsmin', output='pp.min.js')
+js = Bundle('mustache.min.js', 'pp.js', filters='closure_js', output='pp.min.js')
 assets.register('js_all', js)
 
 css = Bundle('pp.css', filters='cssmin', output='pp.min.css')
