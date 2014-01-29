@@ -120,8 +120,8 @@
         function asyncLoad() {
             ajax({
                 path: '/json',
-                callback: function() {
-                    localStorage.setItem('pp.people', xmlhttp.responseText);
+                callback: function( data ) {
+                    localStorage.setItem('pp.people', data);
                     localStorage.setItem('pp.date', Date.now());
                     cb(xmlhttp.responseText);
                 }
