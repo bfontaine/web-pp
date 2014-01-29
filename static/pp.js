@@ -32,11 +32,11 @@
                 });
                 _people_count = _people.length;
 
-                opts['keys'] = [ 'name' ];
-                opts['distance'] = 12;
-                opts['threshold'] = 0.0;
-
-                _fuse = new Fuse(_people, opts);
+                //opts['keys'] = [ 'name' ];
+                //opts['distance'] = 12;
+                //opts['threshold'] = 0.0;
+                //
+                //_fuse = new Fuse(_people, opts);
             },
 
             match: function( str ) {
@@ -56,10 +56,9 @@
 
                 // if the regex test doesn't give any result, fallback to
                 // fuzzy search
-                if (results.length == 0 && str.length < 32) {
-                    console.log("fallback to fuzzy search");
-                    return _fuse.search(str);
-                }
+                //if (results.length == 0 && str.length < 32) {
+                //    return _fuse.search(str);
+                //}
 
                 return results;
             }
