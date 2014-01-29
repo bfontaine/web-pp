@@ -179,6 +179,8 @@ def parse_all():
     pp.update(parse_pps())
     pp.update(parse_gallium())
     pp.update(parse_others())
+    print "All parsing: done"
+    print "Adding ids"
     for k in pp:
         pp[k]['id'] = k
     return pp
