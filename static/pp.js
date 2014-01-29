@@ -1,7 +1,19 @@
 (function() {
     var Mustache = window.Mustache,
-        Fuse = window.Fuse,
-        MAX_RESULTS = 10;
+        //Fuse = window.Fuse,
+        MAX_RESULTS = 10,
+
+        // will be optimized by the minifier
+        pp_tpl = "{{#people}}"
+               + '<li class="people-container">'
+                 + '<a href="{{{url}}}" class="people" data-id="{{id}}">'
+                   + '<img src="/static/icons/{{icon}}" class="icon" />'
+                     + '<p class="info"><b class="name">{{name}}</b>'
+                               + '<span class="details">{{info}}</span>'
+                     + '</p>'
+                   + '</a>'
+                 + '</li>'
+               + '{{/people}}';
 
     // fuzzy matching
     var fuzzy = (function() {
@@ -116,10 +128,9 @@
     }
 
     var updateSuggestions = (function() {
-        var tpl  = document.getElementById('sgtpl').innerHTML,
-            root = document.getElementById('suggs');
+        var root = document.getElementById('suggs');
 
-        Mustache.parse(tpl);
+        Mustache.parse(pp_tpl);
 
         return function( query ) {
             var fields = {};
@@ -131,7 +142,7 @@
             // Google Clojure Compiler
             fields['people'] = fuzzy.match(query);
 
-            root.innerHTML = Mustache.render(tpl, fields);
+            root.innerHTML = Mustache.render(pp_tpl, fields);
         };
     })();
 
