@@ -123,7 +123,7 @@
                 callback: function( data ) {
                     localStorage.setItem('pp.people', data);
                     localStorage.setItem('pp.date', Date.now());
-                    cb(xmlhttp.responseText);
+                    cb(data);
                 }
             });
         }
