@@ -11,8 +11,10 @@
         <link rel="apple-touch-icon"      href="/static/icons/app.png" />
     </head>
     <body>
-        <input type="text" id="q" autocomplete="off" />
-        <ul id="suggs" class="suggestions"></ul>
+        <div class="q-container">
+            <input type="text" id="q" autocomplete="off" />
+            <ul id="suggs" class="suggestions"></ul>
+        </div>
         <script type="x-template" id="sgtpl">
         {% raw %}
         {{#people}}
