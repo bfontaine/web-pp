@@ -80,6 +80,11 @@
             }
         }
         xmlhttp.open(mth, path, true);
+
+        if (mth == 'POST') {
+            xmlhttp.setRequestHeader('Content-type',
+                                     'application/x-www-form-urlencoded');
+        }
         xmlhttp.send(data);
     }
 
