@@ -147,8 +147,9 @@
                 prev_q = query;
             };
 
+        // init
+        q.focus()
         fuzzy.populate(people);
-
         q.addEventListener('keyup', up, false);
 
         // click feedback

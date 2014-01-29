@@ -4,12 +4,50 @@
             box-sizing: border-box;
 }
 
-html, body {
+/* theme */
+body         { background-color: #1E2F41 }
+.q-container { background-color: #7FA39C }
+.suggestions { background-color: #F0E9D6 }
+/* /theme */
+
+body {
     font-family: helvetica, arial, sans-serif;
+    text-align: center;
+    color: #111;
+}
+
+.q-container {
+    text-align: left;
+    display: inline-block;
+
+    margin-top: 100px;
+    width: 400px;
+
+    border-radius: 15px;
+}
+
+.qinput {
+    margin: 10px 15px;
+    width: 370px;
+    padding: 5px 10px;
+    font-size: 2rem;
+
+    border-color: transparent;
+    outline: none;
+    border-radius: 2px;
 }
 
 .suggestions {
     list-style-type: none;
+    margin: 0;
+    padding: 10px;
+
+    border-bottom-left-radius: 15px;
+    border-bottom-right-radius: 15px;
+}
+
+.suggestions:empty {
+    visibility: hidden;
 }
 
 .people {
@@ -21,6 +59,8 @@ html, body {
 .people .icon {
     max-width: 50px;
     max-height: 50px;
+
+    margin-right: 10px;
 }
 
 .people .icon,
@@ -31,6 +71,13 @@ html, body {
 .people .name,
 .people .details {
     display: block;
+}
+
+.people .name {
+    font-size: 1.1em;
+}
+.people .details {
+    color: #666;
 }
 
 .people .info {
