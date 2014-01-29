@@ -23,7 +23,8 @@ js = Bundle('mustache.min.js', 'fuse.js', 'pp.js', \
         filters=(iife, 'closure_js'), output='pp.min.js')
 assets.register('js_all', js)
 
-css = Bundle('pp.css', filters='cssmin', output='pp.min.css')
+css = Bundle('pp.css', 'normalize.css', \
+        filters=('cssmin',), output='pp.min.css')
 assets.register('css_all', css)
 
 @app.route('/')
