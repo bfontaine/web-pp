@@ -1,0 +1,2 @@
+- [ ] Add a ‘refresh’ button to force update of `people.json`.
+- [ ] CSS
