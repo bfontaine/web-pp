@@ -177,18 +177,29 @@
 
         // click feedback
         document.body.addEventListener('click', function( e ) {
-            var el = e.target || e.srcElement;
+            var el = e.target || e.srcElement,
+                tag = el.tagName.toLocaleLowerCase();
 
-            if (el.tagName.toLocaleLowerCase() == 'a') {
-                var key = el.getAttribute('data-id');
+            while (tag != 'a') {
+                el = el.parentElement;
 
-                if (key) {
-                    ajax({
-                        path: '/click',
-                        method: 'POST',
-                        data: 'key='+key+'&query='+q.value
-                    });
+                if (!el) { return; }
+
+                tag = el.tagName.toLocaleLowerCase();
+
+                if (tag == 'body' || tag == 'html') {
+                    return;
                 }
+            }
+
+            var key = el.getAttribute('data-id');
+
+            if (key) {
+                ajax({
+                    path: '/click',
+                    method: 'POST',
+                    data: 'key='+key+'&query='+q.value
+                });
             }
 
         }, false);
