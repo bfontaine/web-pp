@@ -1,5 +1,6 @@
 (function() {
-    var MAX_RESULTS = 10,
+    var Mustache = window.Mustache,
+        MAX_RESULTS = 10,
         MAX_LEVENSHTEIN = 1;
 
     // fuzzy matching
@@ -73,15 +74,16 @@
             },
 
             match: function( str ) {
-                var results = [], cpt=0, i, pstr;
+                var results = [], cpt=0, i, pstr, p;
 
                 reg = fuzzyCache( str );
 
                 for (i=0; i<_people_count; i++) {
                     pstr = _people[i][0];
+                    p    = _people[i][1];
                     if (reg.test(pstr)
-                            || levenshtein(str, pstr) <= MAX_LEVENSHTEIN) {
-                        results.push(_people[i][1]);
+                            || levenshtein(str, p.name) <= MAX_LEVENSHTEIN) {
+                        results.push(p);
                         if (++cpt >= MAX_RESULTS) {
                             break;
                         }
@@ -149,11 +151,16 @@
         Mustache.parse(tpl);
 
         return function( query ) {
+            var fields = {};
+
             // inefficient but ok for now
             if (!query) { return root.innerHTML = ''; }
-            root.innerHTML = Mustache.render(tpl, {
-                people: fuzzy.match(query)
-            });
+
+            // using this prevents the 'people' key from being crushed by
+            // Google Clojure Compiler
+            fields['people'] = fuzzy.match(query);
+
+            root.innerHTML = Mustache.render(tpl, fields);
         };
     })();
 

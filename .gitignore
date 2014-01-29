@@ -7,3 +7,6 @@ __pycache__
 venv
 static/people.json
 dump.rdb
+*.min.css
+*.min.js
+.webassets-cache
