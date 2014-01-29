@@ -1,6 +1,6 @@
 (function() {
     var MAX_RESULTS = 20,
-        MAX_LEVENSHTEIN = 2;
+        MAX_LEVENSHTEIN = 1;
 
     // fuzzy matching
     var fuzzy = (function() {
@@ -80,7 +80,7 @@
                 for (i=0; i<_people_count; i++) {
                     pstr = _people[i][0];
                     if (reg.test(pstr)
-                            || levenshtein(str, pstr) < MAX_LEVENSHTEIN) {
+                            || levenshtein(str, pstr) <= MAX_LEVENSHTEIN) {
                         results.push(_people[i][1]);
                         if (++cpt >= MAX_RESULTS) {
                             break;
@@ -151,7 +151,7 @@
                 var query = q.value +
                                 String.fromCharCode(e.charCode || e.keyCode);
 
-                updateSuggestions(query > 0 ? query : null);
+                updateSuggestions(query.length > 0 ? query : null);
             };
 
         fuzzy.populate(people);
