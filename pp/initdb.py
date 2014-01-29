@@ -79,6 +79,7 @@ def parse_liafa():
     """
     Return a dict of people from LIAFA.
     """
+    print "parsing LIAFA..."
     icon = 'liafa.png'
     people = {}
     base = 'http://www.liafa.univ-paris-diderot.fr/'
@@ -118,6 +119,7 @@ def parse_pps():
     """
     Return a dict of people from PPS
     """
+    print "parsing PPS..."
     icon = 'pps.png'
     people = {}
     base = 'http://www.pps.univ-paris-diderot.fr'
@@ -151,6 +153,7 @@ def parse_gallium():
     Return a dict of people from Gallium. Only a part of them are teaching
     at Paris Diderot.
     """
+    print "parsing Gallium..."
     icon = 'inria.png'
     people = {}
     base = 'http://gallium.inria.fr'
