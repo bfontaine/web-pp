@@ -161,19 +161,12 @@
         var people = JSON.parse(data),
             q      = document.getElementById('q'),
             up     = function( e ) {
-
-                // there's an issue here if the user type in the middle of the
-                // word.
-                var query = q.value +
-                                String.fromCharCode(e.charCode || e.keyCode);
-
-                updateSuggestions(query.length > 0 ? query : null);
+                updateSuggestions(q.value.length > 0 ? q.value : null);
             };
 
         fuzzy.populate(people);
 
-        q.addEventListener('keypress', up, false);
-        q.addEventListener('keydown', up, false);
+        q.addEventListener('keyup', up, false);
 
         // click feedback
         document.body.addEventListener('click', function( e ) {
