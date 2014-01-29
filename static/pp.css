@@ -6,3 +6,17 @@
             box-sizing: border-box;
     
 }
+
+html, body {
+    font-family: helvetica, arial, sans-serif;
+}
+
+.people .icon {
+    max-width: 50px;
+    max-height: 50px;
+}
+
+.people .name,
+.people .details {
+    display: block;
+}
