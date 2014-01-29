@@ -1,2 +1,3 @@
 - [ ] Add a ‘refresh’ button to force update of `people.json`.
 - [ ] CSS
+- [ ] Footer with various links (About, "Someone’s missing?", etc)
