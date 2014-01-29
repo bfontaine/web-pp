@@ -6,11 +6,21 @@ from flask import Flask, Response, render_template, request
 from flask.ext.assets import Environment, Bundle
 from htmlmin.minify import html_minify
 
+def iife(_in, out, **kw):
+    """
+    'iife' filter for webassets. It wraps a JS bundle in an IIFE, thus
+    preventing global leaks.
+    """
+    out.write(';!function(){')
+    out.write(_in.read())
+    out.write('}();')
+
 app = Flask(__name__)
 
 ## assets
 assets = Environment(app)
-js = Bundle('mustache.min.js', 'pp.js', filters='closure_js', output='pp.min.js')
+js = Bundle('mustache.min.js', 'pp.js', \
+        filters=(iife, 'closure_js'), output='pp.min.js')
 assets.register('js_all', js)
 
 css = Bundle('pp.css', filters='cssmin', output='pp.min.css')
