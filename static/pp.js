@@ -1,6 +1,6 @@
 (function() {
     var MAX_RESULTS = 20,
-        MAX_LEVENSHTEIN = 2,
+        MAX_LEVENSHTEIN = 2;
 
     // fuzzy matching
     var fuzzy = (function() {
