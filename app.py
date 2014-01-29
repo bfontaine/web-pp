@@ -4,6 +4,7 @@ import os
 from pp.store import redis
 from flask import Flask, Response, render_template, request
 from flask.ext.assets import Environment, Bundle
+from htmlmin.minify import html_minify
 
 app = Flask(__name__)
 
@@ -17,7 +18,8 @@ assets.register('css_all', css)
 
 @app.route('/')
 def index():
-    return render_template('main.html')
+    html = render_template('main.html')
+    return html_minify(html)
 
 @app.route('/json')
 def people_json():

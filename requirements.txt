@@ -3,13 +3,17 @@ Flask-Assets==0.8
 Jinja2==2.7.2
 MarkupSafe==0.18
 Werkzeug==0.9.4
+argparse==1.1
 beautifulsoup4==4.3.2
 cssmin==0.2.0
+django-htmlmin==0.6.3
 gunicorn==18.0
+html5lib==0.999
 itsdangerous==0.23
 jsmin==2.0.8
 lxml==3.3.0
 newrelic==2.10.1.9
 redis==2.9.1
+six==1.5.2
 webassets==0.8
 wsgiref==0.1.2
