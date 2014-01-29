@@ -35,4 +35,5 @@ html, body {
 
 .people .info {
     margin-top: 0;
+    vertical-align: top;
 }
