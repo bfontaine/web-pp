@@ -78,6 +78,13 @@ body {
 .people .name,
 .people .details {
     display: block;
+    max-width: 300px;
+}
+
+.people .name {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .people .name {

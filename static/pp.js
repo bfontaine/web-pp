@@ -29,8 +29,16 @@
     // pre-parse the template
     Mustache.parse(pp_tpl);
 
+    var cleanQuery = function( str ) {
+            if (!str) { return str; }
+
+            return str.replace(/^\s+|\s+$/, '')  // trailing spaces
+                      .replace(/\s+/g, ' ')      // multiple spaces
+                      .replace(/[^'-\w ]/g, ''); // special chars
+        },
+
     // fuzzy matching
-    var fuzzy = (function() {
+        fuzzy = (function() {
         var _people = [],      // people list
             _people_count = 0, // people list count
             _cache = {},       // regex cache for each name
@@ -42,10 +50,6 @@
             if (_cache.hasOwnProperty(str)) {
                 return _cache[str];
             }
-
-            str = str.replace(/^\s+|\s+$/, '') // trailing spaces
-                     .replace(/\s+/g, ' ')     // multiple spaces
-                     .replace(/[^'-\w ]/g, '') // special chars
 
             return _cache[str] = new RegExp(str, 'i');
         }
@@ -153,6 +157,8 @@
     loadPeopleJSON(function( data ) {
             updateSuggestions = function( query ) {
                 var fields = {};
+
+                query = cleanQuery( query );
 
                 // using this prevents the 'people' key from being crushed
                 // by Google Clojure Compiler
