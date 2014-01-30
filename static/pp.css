@@ -20,6 +20,8 @@ body {
     font-family: helvetica, arial, sans-serif;
     text-align: center;
     color: #111;
+}
+body.app {
     overflow: hidden;
 }
 
@@ -27,13 +29,6 @@ a { color: inherit }
 
 a.text {
     text-decoration: inherit;
-}
-
-footer {
-    position: absolute;
-    bottom: 0;
-    left; 0;
-    width: 100%;
 }
 
 article,
@@ -127,15 +122,40 @@ article,
     color: #444;
 }
 
-/* About page */
+/* About Page */
+
+.page {
+    min-height: 100%;
+    position: relative;
+}
+
 article {
     width: auto;
     min-width: 400px;
     max-width: 70ex;
     font-size: 1.2rem;
 
-    padding: 20px 20px 25px;
+    padding: 20px 20px 35px;
+
+    margin-bottom: 80px;
 }
 article h1 {
     margin-top: 0;
+}
+footer {
+    position: absolute;
+    bottom: 0;
+    left; 0;
+    width: 100%;
+    height: 25px;
+    text-align: center;
+    padding: 4px 10px;
+
+    font-size: 0.8rem;
+    color: rgba(120, 130, 120, 0.8);
+    text-shadow: 0 -1px 1px #000;
+}
+footer p {
+    margin: 0;
+    padding: 0;
 }

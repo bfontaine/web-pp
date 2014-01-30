@@ -15,33 +15,82 @@
         -->
     </head>
     <body>
-        <article class="ascii">
-            {% filter markdown %}
+        <div class="page">
+            <article class="ascii">
+                {% filter markdown %}
 # About P7PP
 
 <b>P7PP</b>, codename `web-pp`, is a Web port of [`alfred-pp`][alfred-pp], a
 workflow for [Alfred][alfred] on Mac OS X which allows one to quickly go on a
-teacher's page using a few keystrokes. Data is fetched from the Web once, and
-then stored locally.
+teacher's page using a few keystrokes. Data is fetched from the Web only once,
+and then stored locally.
+
+This implementation allows anyone to use `pp`. It works exactly the same way as
+the original one.
 
 [alfred-pp]: https://github.com/bfontaine/alfred-pp#readme
 [alfred]: http://www.alfredapp.com/
 
-## How to use
+## How to use it
 
-more content
+Start typing a teacher's name in the box. It'll suggest you some names. The
+first one is highlighted by default, and you can move using up and down arrows.
+Press <kbd>enter</kbd> to open the selected teacher's personal page.
+
+Additionally, pressing <kbd>ctrl</kbd> and <kbd>enter</kbd> at the same time
+opens the page in a new tab instead of using the current one (you can use
+<kbd>shift</kbd> if you prefer, or <kbd>cmd</kbd> on OS X). Press
+<kbd>tab</kbd> to replace your input with the selected teacher's name.
+
+You can also use the good ol' mouse, but the goal is to save your time, this is
+why the box has already the focus when you open P7PP.
 
 ## How it works
 
-more content
-            {% endfilter %}
-        </article>
+The application is written in Python (using Flask and Gunicorn), and uses Redis
+to store some info. Every night around 4AM, it fetches LIAFA, PPS and Gallium
+member lists, extract some info from them (at least each name and webpage URL),
+and store them locally. It also perform some lexical transformations to
+facilitate search operations later.
 
-        <footer>
-            <p><a href="/">&larr; Home</a>
-               &copy;&nbsp;2014&nbsp;<a href="http://bfontaine.net"
-                                        class="text" />Baptiste Fontaine</a></p>
-        </footer>
+When you go on the app, it serves you the most up to date people list and the
+all the code it needs. The search is done on the client side to avoid
+unecessary requests.
+
+The JavaScript code uses [Mustache][mustache] for the suggestions rendering and
+[Mousetrap][mt] for keyboard shortcuts. All the code is agressively compressed
+to speed up the loading time.
+
+Everything will be on GitHub in a few days.
+
+[mustache]: https://github.com/janl/mustache.js
+[mt]: http://craig.is/killing/mice
+
+## Who did that?
+
+Hi! I'm [Baptiste Fontaine][bf], currently doing a M.Sc. in Computer Science at
+Paris Diderot University. I wrote `alfred-pp` for my personal usage, and 
+[someone][jch] suggested me to adapt the code and put it online for everybody.
+Here is it ;)
+
+[bf]: http://bfontaine.net
+[jch]: http://www.pps.univ-paris-diderot.fr/~jch/
+[gh]: https://github.com/bfontaine
+
+## More Help
+
+Someone's missing? You have more questions? Drop me an email, I usually respond
+under a few days.
+
+                {% endfilter %}
+            </article>
+
+            <footer>
+                <p><a href="/">&larr; Home</a>
+                   &copy;&nbsp;2014&nbsp;<a href="http://bfontaine.net"
+                                            class="text" />Baptiste Fontaine</a></p>
+            </footer>
+        </div>
         {% assets "js_articles" %}
         <script src="{{ ASSET_URL }}"></script>
         {% endassets %}

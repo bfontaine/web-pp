@@ -1,2 +1,1 @@
 - [ ] Mobile CSS
-- [ ] Footer with various links (About, "Someone’s missing?", etc)
