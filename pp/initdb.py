@@ -148,6 +148,27 @@ def parse_pps():
 
         people[mk_people_key('pps', p['url'])] = p
 
+    print "parsing PPS (pi.r2)..."
+    souper = soup_url(base + '/pi.r2/Members')
+    lis = souper.select('.members')[0].find_all('li')
+    for li in lis:
+        link = li.find('.ocsimore_phrasing_link')
+        name = li.find('strong')
+        if not link or not name:
+            continue
+        p = {}
+        p['url'] = link.get('href')
+        p['name'] = fmt_name(text(name))
+        p['fuzzy'] = mk_fuzzy(p)
+        p['icon'] = icon
+        p['info'] = ''
+        # we keep the same key to avoid potential duplicates
+        key = mk_people_key('pps', p['url'])
+        if key in people:
+            continue
+
+        people[k] = p
+
     return people
 
 def parse_gallium():
