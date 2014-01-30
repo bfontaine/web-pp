@@ -19,7 +19,7 @@ app = Flask(__name__)
 
 ## assets
 assets = Environment(app)
-js = Bundle('mustache.min.js', 'fuse.js', 'pp.js', \
+js = Bundle('mustache.min.js', 'mousetrap.js', 'fuse.js', 'pp.js', \
         filters=(iife, 'closure_js'), output='pp.min.js')
 assets.register('js_all', js)
 
