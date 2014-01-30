@@ -1,5 +1,6 @@
 (function() {
-    var Mustache = window.Mustache,
+    var Mustache  = window.Mustache,
+        Mousetrap = window.Mousetrap,
         //Fuse = window.Fuse,
         MAX_RESULTS = 10,
 
@@ -13,7 +14,15 @@
                      + '</p>'
                    + '</a>'
                  + '</li>'
-               + '{{/people}}';
+               + '{{/people}}',
+
+        suggs = [],
+        suggs_cursor = -1,
+
+        // dynamic array
+        lis = document.getElementsByTagName('li');
+
+    Mustache.parse(pp_tpl);
 
     // fuzzy matching
     var fuzzy = (function() {
@@ -69,10 +78,10 @@
                 // if the regex test doesn't give any result, fallback to
                 // fuzzy search
                 //if (results.length == 0 && str.length < 32) {
-                //    return _fuse.search(str);
+                //    return suggs = _fuse.search(str);
                 //}
 
-                return results;
+                return suggs = results;
             }
         };
     })();
@@ -127,27 +136,23 @@
         return cb(localStorage.getItem('pp.people'));
     }
 
-    var updateSuggestions = (function() {
-        var root = document.getElementById('suggs');
-
-        Mustache.parse(pp_tpl);
-
-        return function( query ) {
-            var fields = {};
-
-            // inefficient but ok for now
-            if (!query) { return root.innerHTML = ''; }
-
-            // using this prevents the 'people' key from being crushed by
-            // Google Clojure Compiler
-            fields['people'] = fuzzy.match(query);
-
-            root.innerHTML = Mustache.render(pp_tpl, fields);
-        };
-    })();
-
     loadPeopleJSON(function( data ) {
-        var people = JSON.parse(data),
+        var root = document.getElementById('suggs'),
+            updateSuggestions = function( query ) {
+                var fields = {};
+
+                // using this prevents the 'people' key from being crushed
+                // by Google Clojure Compiler
+                fields['people'] = query ? fuzzy.match(query) : [];
+
+                suggs_cursor = suggs.length ? 0 : -1;
+
+                root.innerHTML = Mustache.render(pp_tpl, fields);
+
+                window.setTimeout(updateSelectedElement, 10);
+            },
+        
+            people = JSON.parse(data),
             q      = document.getElementById('q'),
             prev_q = '',
             up     = function( e ) {
@@ -163,7 +168,74 @@
         fuzzy.populate(people);
         q.addEventListener('keyup', up, false);
 
+        function updateSelectedElement( by ) {
+            var l = lis.length;
+
+            by = by || 0;
+
+            if (by < 0 && suggs_cursor <= 0) {
+                return;
+            }
+
+            if (by > 0 && suggs_cursor >= l-1) {
+                return;
+            }
+
+            suggs_cursor += by;
+
+            if (l == 0 || suggs_cursor < 0 || suggs_cursor >= l) {
+                return;
+            }
+
+            // classList: IE 10+, iOS 5+, Android 3+, no Opera Mini
+
+            [].forEach.call(lis, function(li) {
+                li.classList.remove('selected');
+            });
+
+            lis[suggs_cursor].classList.add('selected');
+        }
+
+        // keyboard shortcuts
+        function selectPreviousResult() {
+            updateSelectedElement(-1);
+        }
+        function selectNextResult() {
+            updateSelectedElement(1);
+        }
+        function openResult( newTab ) {
+            // TODO
+            console.log('open result' + (newTab ? ' in a new tab.' : ''));
+        }
+        function completeResult( e ) {
+            var li = lis[suggs_cursor], name;
+
+            if ( li && (name = li.getElementsByClassName('name')[0]) ) {
+                q.value = name.textContent || name.innerText;
+            }
+
+            e.preventDefault();
+            return false;
+        }
+
+        Mousetrap.bind('up',   selectPreviousResult);
+        Mousetrap.bind('down', selectNextResult);
+        Mousetrap.bind('enter', function() { openResult(); });
+        Mousetrap.bind('mod+enter', function() { openResult(true); });
+        Mousetrap.bind('tab', function( e ) {
+            if (document.activeElement == q) {
+                completeResult( e );
+            }
+        });
+
         // click feedback
+        function clickFeedback( key ) {
+            ajax({
+                path: '/click',
+                method: 'POST',
+                data: 'key='+key+'&query='+q.value
+            });
+        }
         document.body.addEventListener('mousedown', function( e ) {
             var el = e.target || e.srcElement,
                 tag = el.tagName.toLocaleLowerCase();
@@ -183,11 +255,7 @@
             var key = el.getAttribute('data-id');
 
             if (key) {
-                ajax({
-                    path: '/click',
-                    method: 'POST',
-                    data: 'key='+key+'&query='+q.value
-                });
+                clickFeedback( key );
             }
 
         }, false);

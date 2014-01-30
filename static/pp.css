@@ -84,3 +84,9 @@ body {
     margin-top: 0;
     vertical-align: top;
 }
+
+/* tests */
+
+.suggestions .selected {
+    background-color: green;
+}
