@@ -16,7 +16,7 @@ import json
 from store import redis
 from bs4 import BeautifulSoup
 from unidecode import unidecode
-from urllib2 import urlopen
+from urllib2 import urlopen, Request
 from urlparse import urljoin, urlparse
 
 def fmt_phone(ph):
@@ -64,7 +64,8 @@ def soup_url(url):
     """
     Get an HTML document from an URL, and return its (beautiful) soup
     """
-    html = urlopen(url).read()
+    req = Request(url, headers={'User-Agent': 'p7pp/web'})
+    html = urlopen(req).read()
     return BeautifulSoup(html, "lxml")
 
 def mk_people_key(org, url):
