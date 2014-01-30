@@ -34,7 +34,7 @@
 
             return str.replace(/^\s+|\s+$/, '')  // trailing spaces
                       .replace(/\s+/g, ' ')      // multiple spaces
-                      .replace(/[^'-\w ]/g, ''); // special chars
+                      .replace(/[^'\w -]/g, ''); // special chars
         },
 
     // fuzzy matching
