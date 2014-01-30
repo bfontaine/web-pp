@@ -43,8 +43,9 @@
                 return _cache[str];
             }
 
-            str = str.replace(/\s+/g, ' ')
-                     .replace(/[^\w ]/g, '');
+            str = str.replace(/^\s+|\s+$/, '') // trailing spaces
+                     .replace(/\s+/g, ' ')     // multiple spaces
+                     .replace(/[^'-\w ]/g, '') // special chars
 
             return _cache[str] = new RegExp(str, 'i');
         }
