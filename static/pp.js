@@ -39,70 +39,82 @@
 
     // fuzzy matching
         fuzzy = (function() {
-        var _people = [],      // people list
-            _people_count = 0, // people list count
-            _cache = {},       // regex cache for each name
-            _fuse;
-            
-        function fuzzyCache( str ) {
-            var reg;
+            var _people = [],      // people list
+                _people_count = 0, // people list count
+                _cache = {},       // regex cache for each name
+                //_fuse,
+                _preloaded_icons = {};
+                
+            function fuzzyCache( str ) {
+                var reg;
 
-            if (_cache.hasOwnProperty(str)) {
-                return _cache[str];
-            }
-
-            return _cache[str] = new RegExp(str, 'i');
-        }
-
-        function addNumbers( ary ) {
-            var i, l=ary.length;
-            for (i=0; i<l; i++) {
-                ary[i] && (ary[i]['n'] = i);
-            }
-
-            return ary;
-        }
-
-        return {
-            populate: function( people ) {
-                var opts = {};
-                _people = Object.keys(people).map(function(k) {
-                    return people[k];
-                });
-                _people_count = _people.length;
-
-                //opts['keys'] = [ 'name' ];
-                //opts['distance'] = 12;
-                //opts['threshold'] = 0.0;
-                //
-                //_fuse = new Fuse(_people, opts);
-            },
-
-            match: function( str ) {
-                var results = [], cpt=0, i, p;
-
-                reg = fuzzyCache( str );
-
-                for (i=0; i<_people_count; i++) {
-                    p = _people[i];
-                    if (reg.test(p['fuzzy'] || p['name'])) {
-                        results.push(p);
-                        if (++cpt >= MAX_RESULTS) {
-                            break;
-                        }
-                    }
+                if (_cache.hasOwnProperty(str)) {
+                    return _cache[str];
                 }
 
-                // if the regex test doesn't give any result, fallback to
-                // fuzzy search
-                //if (results.length == 0 && str.length < 32) {
-                //    return suggs = addNumbers(_fuse.search(str));
-                //}
-
-                return suggs = addNumbers(results);
+                return _cache[str] = new RegExp(str, 'i');
             }
-        };
-    })();
+
+            function addNumbers( ary ) {
+                var i, l=ary.length;
+                for (i=0; i<l; i++) {
+                    ary[i] && (ary[i]['n'] = i);
+                }
+
+                return ary;
+            }
+
+            return {
+                populate: function( people ) {
+                    var opts = {}, i, icon, img;
+                    _people = Object.keys(people).map(function(k) {
+                        return people[k];
+                    });
+                    _people_count = _people.length;
+
+                    //opts['keys'] = [ 'name' ];
+                    //opts['distance'] = 12;
+                    //opts['threshold'] = 0.0;
+                    //
+                    //_fuse = new Fuse(_people, opts);
+
+                    // preload images
+                    for (i=0; i<_people_count; i++) {
+                        icon = _people[i]['icon'];
+                        if (_preloaded_icons[icon]) {
+                            continue;
+                        }
+                        img = new Image();
+                        img.src = '/static/icons/' + icon;
+                        _preloaded_icons[icon] = true;
+                    }
+                },
+
+                match: function( str ) {
+                    var results = [], cpt=0, i, p;
+
+                    reg = fuzzyCache( str );
+
+                    for (i=0; i<_people_count; i++) {
+                        p = _people[i];
+                        if (reg.test(p['fuzzy'] || p['name'])) {
+                            results.push(p);
+                            if (++cpt >= MAX_RESULTS) {
+                                break;
+                            }
+                        }
+                    }
+
+                    // if the regex test doesn't give any result, fallback to
+                    // fuzzy search
+                    //if (results.length == 0 && str.length < 32) {
+                    //    return suggs = addNumbers(_fuse.search(str));
+                    //}
+
+                    return suggs = addNumbers(results);
+                }
+            };
+        })();
 
     function ajax(opts) {
         var xmlhttp = new XMLHttpRequest(),
