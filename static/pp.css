@@ -14,6 +14,7 @@ body {
     font-family: helvetica, arial, sans-serif;
     text-align: center;
     color: #111;
+    overflow: hidden;
 }
 
 .q-container {
@@ -40,10 +41,15 @@ body {
 .suggestions {
     list-style-type: none;
     margin: 0;
-    padding: 10px 10px 10px 15px;
+    padding: 10px 0;
 
     border-bottom-left-radius: 15px;
     border-bottom-right-radius: 15px;
+}
+
+.suggestions li {
+    padding: 0 10px 0 15px;
+    height: 56px;
 }
 
 .suggestions:empty {
@@ -54,13 +60,13 @@ body {
     display: block;
     color: inherit;
     text-decoration: inherit;
+    height: 100%;
 }
 
 .people .icon {
     max-width: 50px;
     max-height: 50px;
-
-    margin-right: 10px;
+    margin: 3px 10px 0 0;
 }
 
 .people .icon,
@@ -88,5 +94,8 @@ body {
 /* tests */
 
 .suggestions .selected {
-    background-color: green;
+    background-color: #B8C6B9;
+}
+.suggestions .selected .details {
+    color: #444;
 }

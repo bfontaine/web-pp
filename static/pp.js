@@ -2,11 +2,11 @@
     var Mustache  = window.Mustache,
         Mousetrap = window.Mousetrap,
         //Fuse = window.Fuse,
-        MAX_RESULTS = 10,
+        MAX_RESULTS = 8,
 
         // will be optimized by the minifier
         pp_tpl = "{{#people}}"
-               + '<li class="people-container">'
+               + '<li class="people-container" data-n="{{n}}">'
                  + '<a href="{{{url}}}" class="people" data-id="{{id}}">'
                    + '<img src="/static/icons/{{icon}}" class="icon" />'
                      + '<p class="info"><b class="name">{{name}}</b>'
@@ -16,12 +16,17 @@
                  + '</li>'
                + '{{/people}}',
 
+        // minify++
+        document = window.document,
+
         suggs = [],
         suggs_cursor = -1,
+        suggs_root = document.getElementById('suggs'),
 
         // dynamic array
         lis = document.getElementsByTagName('li');
 
+    // pre-parse the template
     Mustache.parse(pp_tpl);
 
     // fuzzy matching
@@ -29,21 +34,29 @@
         var _people = [],      // people list
             _people_count = 0, // people list count
             _cache = {},       // regex cache for each name
-            _fuse,
-            fuzzyCache = function( str ) {
-                var reg;
+            _fuse;
+            
+        function fuzzyCache( str ) {
+            var reg;
 
-                if (_cache.hasOwnProperty(str)) {
-                    return _cache[str];
-                }
+            if (_cache.hasOwnProperty(str)) {
+                return _cache[str];
+            }
 
-                str = str.replace(/\s+/g, ' ')
-                         .replace(/[^\w ]/g, '');
+            str = str.replace(/\s+/g, ' ')
+                     .replace(/[^\w ]/g, '');
 
-                var reg = new RegExp(str, 'i');
+            return _cache[str] = new RegExp(str, 'i');
+        }
 
-                return _cache[str] = reg;
-            };
+        function addNumbers( ary ) {
+            var i, l=ary.length;
+            for (i=0; i<l; i++) {
+                ary[i] && (ary[i]['n'] = i);
+            }
+
+            return ary;
+        }
 
         return {
             populate: function( people ) {
@@ -78,10 +91,10 @@
                 // if the regex test doesn't give any result, fallback to
                 // fuzzy search
                 //if (results.length == 0 && str.length < 32) {
-                //    return suggs = _fuse.search(str);
+                //    return suggs = addNumbers(_fuse.search(str));
                 //}
 
-                return suggs = results;
+                return suggs = addNumbers(results);
             }
         };
     })();
@@ -137,7 +150,6 @@
     }
 
     loadPeopleJSON(function( data ) {
-        var root = document.getElementById('suggs'),
             updateSuggestions = function( query ) {
                 var fields = {};
 
@@ -147,9 +159,9 @@
 
                 suggs_cursor = suggs.length ? 0 : -1;
 
-                root.innerHTML = Mustache.render(pp_tpl, fields);
+                suggs_root.innerHTML = Mustache.render(pp_tpl, fields);
 
-                window.setTimeout(updateSelectedElement, 10);
+                window.setTimeout(updateSelectedElement, 5);
             },
         
             people = JSON.parse(data),
@@ -171,21 +183,16 @@
         function updateSelectedElement( by ) {
             var l = lis.length;
 
-            by = by || 0;
-
-            if (by < 0 && suggs_cursor <= 0) {
-                return;
-            }
-
-            if (by > 0 && suggs_cursor >= l-1) {
-                return;
-            }
-
-            suggs_cursor += by;
-
             if (l == 0 || suggs_cursor < 0 || suggs_cursor >= l) {
                 return;
             }
+
+            by = by || 0;
+
+            if (suggs_cursor + by < 0
+                || suggs_cursor + by >= l) { return; }
+
+            suggs_cursor += by;
 
             // classList: IE 10+, iOS 5+, Android 3+, no Opera Mini
 
@@ -196,7 +203,6 @@
             lis[suggs_cursor].classList.add('selected');
         }
 
-        // keyboard shortcuts
         function selectPreviousResult( e ) {
             updateSelectedElement(-1);
             e.preventDefault();
@@ -208,8 +214,17 @@
             return false;
         }
         function openResult( newTab ) {
-            // TODO
-            console.log('open result' + (newTab ? ' in a new tab.' : ''));
+            var li = lis[suggs_cursor], a, link;
+
+            if (!li) { return; }
+
+            a = li.childNodes[0];
+            if (!a) { return; }
+
+            link = a.getAttribute('href');
+            clickFeedback(a.getAttribute('data-id'));
+
+            newTab ? window.open(link, '_blank') : document.location = link;
         }
         function completeResult( e ) {
             var li = lis[suggs_cursor], name;
@@ -222,15 +237,36 @@
             return false;
         }
 
+        // keyboard shortcuts
         Mousetrap.bind('up',   selectPreviousResult);
         Mousetrap.bind('down', selectNextResult);
         Mousetrap.bind('enter', function() { openResult(); });
-        Mousetrap.bind('mod+enter', function() { openResult(true); });
+        Mousetrap.bind(['mod+enter', 'shift+enter'], function() {
+            openResult(true); });
         Mousetrap.bind('tab', function( e ) {
             if (document.activeElement == q) {
                 completeResult( e );
             }
         });
+
+        suggs_root.addEventListener('mouseover', function( e ) {
+            var el = e.target || e.which, n;
+
+            e.stopPropagation();
+
+            while(!el.className || el.className.indexOf('people-container') == -1) {
+                el = el.parentElement;
+
+                if (!el || el.tagName == 'body') { return; }
+            }
+
+            n = +el.getAttribute('data-n');
+
+            if (!isNaN(n)) {
+                updateSelectedElement(n - suggs_cursor);
+            }
+
+        }, false);
 
         // click feedback
         function clickFeedback( key ) {
@@ -240,7 +276,7 @@
                 data: 'key='+key+'&query='+q.value
             });
         }
-        document.body.addEventListener('mousedown', function( e ) {
+        suggs_root.addEventListener('mousedown', function( e ) {
             var el = e.target || e.srcElement,
                 tag = el.tagName.toLocaleLowerCase();
 
