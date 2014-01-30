@@ -112,6 +112,7 @@ article,
 
 .people .info {
     margin: 0;
+    padding-top: 6px;
     vertical-align: top;
 }
 
