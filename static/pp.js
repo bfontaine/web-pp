@@ -128,30 +128,10 @@
 
     // load people info
     function loadPeopleJSON( cb ) {
-
-        function asyncLoad() {
-            ajax({
-                path: '/json',
-                callback: function( data ) {
-                    localStorage.setItem('pp.people', data);
-                    localStorage.setItem('pp.date', Date.now());
-                    cb(data);
-                }
-            });
-        }
-
-        if (!window.localStorage) { // no support for localStorage
-            return asyncLoad();
-        }
-
-        var lastUpdate = localStorage.getItem('pp.date');
-
-        // if field doesn't exist or we didn't update since 48 hours
-        if (!lastUpdate || Date.now() > +lastUpdate + 172800000) {
-            return asyncLoad();
-        }
-
-        return cb(localStorage.getItem('pp.people'));
+        ajax({
+            path: '/json',
+            callback: cb
+        });
     }
 
     loadPeopleJSON(function( data ) {
