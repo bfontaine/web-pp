@@ -152,7 +152,7 @@ def parse_pps():
     souper = soup_url(base + '/pi.r2/Members')
     lis = souper.select('.members')[0].find_all('li')
     for li in lis:
-        link = li.find('.ocsimore_phrasing_link')
+        link = li.find('a')
         name = li.find('strong')
         if not link or not name:
             continue
@@ -165,9 +165,10 @@ def parse_pps():
         # we keep the same key to avoid potential duplicates
         key = mk_people_key('pps', p['url'])
         if key in people:
+            print "%s is already at PPS, skipping" % p['name']
             continue
 
-        people[k] = p
+        people[key] = p
 
     return people
 
