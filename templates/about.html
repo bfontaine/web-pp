@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8" />
         <meta name="language" content="en" />
-        <title>P7PP - P7 Personal Pages</title>
+        <title>P7PP - About</title>
         {% assets "css_all" %}
         <link rel="stylesheet" href="{{ ASSET_URL }}" />
         {% endassets %}
@@ -15,18 +15,34 @@
         -->
     </head>
     <body>
-        <div class="q-container">
-            <input type="text" id="q"
-                class="qinput mousetrap" autocomplete="off" />
-            <ul id="suggs" class="suggestions"></ul>
-        </div>
+        <article class="ascii">
+            {% filter markdown %}
+# About P7PP
+
+<b>P7PP</b>, codename `web-pp`, is a Web port of [`alfred-pp`][alfred-pp], a
+workflow for [Alfred][alfred] on Mac OS X which allows one to quickly go on a
+teacher's page using a few keystrokes. Data is fetched from the Web once, and
+then stored locally.
+
+[alfred-pp]: https://github.com/bfontaine/alfred-pp#readme
+[alfred]: http://www.alfredapp.com/
+
+## How to use
+
+more content
+
+## How it works
+
+more content
+            {% endfilter %}
+        </article>
 
         <footer>
-            <p><a href="/about">About</a>
+            <p><a href="/">&larr; Home</a>
                &copy;&nbsp;2014&nbsp;<a href="http://bfontaine.net"
                                         class="text" />Baptiste Fontaine</a></p>
         </footer>
-        {% assets "js_all" %}
+        {% assets "js_articles" %}
         <script src="{{ ASSET_URL }}"></script>
         {% endassets %}
     </body>

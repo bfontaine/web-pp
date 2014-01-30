@@ -6,10 +6,16 @@
 
 /* theme */
 body         { background-color: #1E2F41 }
+article,
 .q-container { background-color: #7FA39C }
 .suggestions { background-color: #F0E9D6 }
 /* /theme */
 
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
 body {
     font-family: helvetica, arial, sans-serif;
     text-align: center;
@@ -17,6 +23,20 @@ body {
     overflow: hidden;
 }
 
+a { color: inherit }
+
+a.text {
+    text-decoration: inherit;
+}
+
+footer {
+    position: absolute;
+    bottom: 0;
+    left; 0;
+    width: 100%;
+}
+
+article,
 .q-container {
     text-align: left;
     display: inline-block;
@@ -42,6 +62,7 @@ body {
     list-style-type: none;
     margin: 0;
     padding: 10px 0;
+    z-index: 1000;
 
     border-bottom-left-radius: 15px;
     border-bottom-right-radius: 15px;
@@ -99,11 +120,22 @@ body {
     vertical-align: top;
 }
 
-/* tests */
-
 .suggestions .selected {
     background-color: #B8C6B9;
 }
 .suggestions .selected .details {
     color: #444;
+}
+
+/* About page */
+article {
+    width: auto;
+    min-width: 400px;
+    max-width: 70ex;
+    font-size: 1.2rem;
+
+    padding: 20px 20px 25px;
+}
+article h1 {
+    margin-top: 0;
 }
