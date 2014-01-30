@@ -197,11 +197,15 @@
         }
 
         // keyboard shortcuts
-        function selectPreviousResult() {
+        function selectPreviousResult( e ) {
             updateSelectedElement(-1);
+            e.preventDefault();
+            return false;
         }
-        function selectNextResult() {
+        function selectNextResult( e ) {
             updateSelectedElement(1);
+            e.preventDefault();
+            return false;
         }
         function openResult( newTab ) {
             // TODO
