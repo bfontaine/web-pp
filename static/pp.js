@@ -1,7 +1,6 @@
 (function() {
     var Mustache  = window.Mustache,
         Mousetrap = window.Mousetrap,
-        //Fuse = window.Fuse,
         MAX_RESULTS = 8,
 
         // will be optimized by the minifier
@@ -42,7 +41,6 @@
             var _people = [],      // people list
                 _people_count = 0, // people list count
                 _cache = {},       // regex cache for each name
-                //_fuse,
                 _preloaded_icons = {};
                 
             function fuzzyCache( str ) {
@@ -66,17 +64,11 @@
 
             return {
                 populate: function( people ) {
-                    var opts = {}, i, icon, img;
+                    var i, icon, img;
                     _people = Object.keys(people).map(function(k) {
                         return people[k];
                     });
                     _people_count = _people.length;
-
-                    //opts['keys'] = [ 'name' ];
-                    //opts['distance'] = 12;
-                    //opts['threshold'] = 0.0;
-                    //
-                    //_fuse = new Fuse(_people, opts);
 
                     // preload images
                     for (i=0; i<_people_count; i++) {
@@ -104,12 +96,6 @@
                             }
                         }
                     }
-
-                    // if the regex test doesn't give any result, fallback to
-                    // fuzzy search
-                    //if (results.length == 0 && str.length < 32) {
-                    //    return suggs = addNumbers(_fuse.search(str));
-                    //}
 
                     return suggs = addNumbers(results);
                 }
@@ -221,7 +207,6 @@
             if (!a) { return; }
 
             link = a.getAttribute('href');
-            clickFeedback(a.getAttribute('data-id'));
 
             newTab ? window.open(link, '_blank') : document.location = link;
         }
@@ -263,38 +248,6 @@
 
             if (!isNaN(n)) {
                 updateSelectedElement(n - suggs_cursor);
-            }
-
-        }, false);
-
-        // click feedback
-        function clickFeedback( key ) {
-            ajax({
-                path: '/click',
-                method: 'POST',
-                data: 'key='+key+'&query='+q.value
-            });
-        }
-        suggs_root.addEventListener('mousedown', function( e ) {
-            var el = e.target || e.srcElement,
-                tag = el.tagName.toLocaleLowerCase();
-
-            while (tag != 'a') {
-                el = el.parentElement;
-
-                if (!el) { return; }
-
-                tag = el.tagName.toLocaleLowerCase();
-
-                if (tag == 'body' || tag == 'html') {
-                    return;
-                }
-            }
-
-            var key = el.getAttribute('data-id');
-
-            if (key) {
-                clickFeedback( key );
             }
 
         }, false);

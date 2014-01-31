@@ -23,7 +23,7 @@ Misaka(app)
 assets = Environment(app)
 
 ### JS
-js = Bundle('mustache.min.js', 'mousetrap.js', 'fuse.js', 'pp.js', \
+js = Bundle('mustache.min.js', 'mousetrap.js', 'pp.js', \
         filters=(iife, 'closure_js'), output='pp.min.js')
 assets.register('js_all', js)
 
@@ -50,15 +50,3 @@ def about():
 def people_json():
     resp = redis.get('people.json') or '[]'
     return Response(resp, 200, mimetype='application/json')
-
-@app.route('/click', methods=['POST'])
-def user_feedback():
-    query  = request.form['query']
-    result = request.form['key']
-
-    if len(query) > 32:
-        return 'too large'
-
-    redis.hincrby(query, result)
-    redis.expire(query, 518400) # 6 days
-    return 'ok'
