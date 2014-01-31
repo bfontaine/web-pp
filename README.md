@@ -40,4 +40,5 @@ Then run the app:
 make run
 ```
 
-And open your browser at `localhost:8000`.
+And open your browser at `localhost:8000`. You’ll have to wait a few seconds
+the first time because the JS/CSS/HTML code will be minified.

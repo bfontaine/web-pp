@@ -1,5 +1,6 @@
 Flask==0.10.1
 Flask-Assets==0.8
+Flask-Cache==0.12
 Flask-Misaka==0.2.0
 Jinja2==2.7.2
 MarkupSafe==0.18
