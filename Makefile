@@ -12,4 +12,5 @@ populate:
 	\python scheduler.py
 
 run:
+	CLOSURE_COMPRESSOR_OPTIMIZATION=ADVANCED_OPTIMIZATIONS \
 	gunicorn app:app
