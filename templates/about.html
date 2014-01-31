@@ -38,8 +38,8 @@ first one is highlighted by default, and you can move using up and down arrows.
 Press <kbd>enter</kbd> to open the selected teacher's personal page.
 
 Additionally, pressing <kbd>ctrl</kbd> and <kbd>enter</kbd> at the same time
-opens the page in a new tab instead of using the current one (you can use
-<kbd>shift</kbd> if you prefer, or <kbd>cmd</kbd> on OS X). Press
+opens the page in a new tab instead of using the current one (you can use 
+<kbd>shift</kbd> if you prefer, or <kbd>cmd</kbd> on OS X). Press 
 <kbd>tab</kbd> to replace your input with the selected teacher's name.
 
 You can also use the good ol' mouse, but the goal is to save your time, this is
@@ -50,16 +50,16 @@ why the box has already the focus when you open P7PP.
 The application is written in Python (using Flask and Gunicorn), and uses Redis
 to store some info. Every night around 4AM, it fetches LIAFA, PPS and Gallium
 member lists, extract some info from them (at least each name and webpage URL),
-and store them locally. It also perform some lexical transformations to
+and store them locally. It also performs some lexical transformations to
 facilitate search operations later.
 
 When you go on the app, it serves you the most up to date people list and the
 all the code it needs. The search is done on the client side to avoid
 unecessary requests.
 
-The JavaScript code uses [Mustache][mustache] for the suggestions rendering and
+The JavaScript code uses [Mustache][mustache] for the suggestions rendering and 
 [Mousetrap][mt] for keyboard shortcuts. All the code is agressively compressed
-to speed up the loading time.
+to speed up loading time.
 
 Everything will be on GitHub in a few days.
 
