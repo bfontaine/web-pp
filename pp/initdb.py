@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 """
 This module provide utilities to update the local list of people. This list is
-stored as JSON in /static/people.json, and each person is a dict with these
-keys: 'name' (the person name), 'url' (its personal page URL), 'icon' (an icon
-path), 'info' (more info about this person; may be empty), and an optional key,
-'fuzzy', which can be used for fuzzy matching.
+stored as JSON in Redis and served through /json, each person is a dict with
+the following keys: 'name' (the person name), 'url' (its personal page URL),
+'icon' (an icon path), 'info' (more info about this person; may be empty), and
+an optional key, 'fuzzy', which can be used for fuzzy matching.
 
 .save_list should be called each day/week/month by a scheduler to update
 people.json.
