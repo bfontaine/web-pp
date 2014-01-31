@@ -21,6 +21,7 @@ body {
     text-align: center;
     color: #111;
 }
+
 body.app {
     overflow: hidden;
 }
@@ -31,26 +32,23 @@ a.text {
     text-decoration: inherit;
 }
 
-article,
 .q-container {
     text-align: left;
     display: inline-block;
-
-    margin-top: 100px;
-    width: 400px;
-
-    border-radius: 15px;
+    margin: 0;
+    padding: 4px 0 0;
+    width: 100%;
 }
 
 .qinput {
-    margin: 10px 15px;
-    width: 370px;
+    margin: 0;
+    width: 100%;
+    font-size: 3rem;
+
     padding: 5px 10px;
-    font-size: 2rem;
 
     border-color: transparent;
     outline: none;
-    border-radius: 2px;
 }
 
 .suggestions {
@@ -58,9 +56,6 @@ article,
     margin: 0;
     padding: 10px 0;
     z-index: 1000;
-
-    border-bottom-left-radius: 15px;
-    border-bottom-right-radius: 15px;
 }
 
 .suggestions li {
@@ -97,16 +92,20 @@ article,
     max-width: 300px;
 }
 
+.people,
 .people .name {
     white-space: nowrap;
+}
+.people .name {
     overflow: hidden;
     text-overflow: ellipsis;
 }
 
 .people .name {
-    font-size: 1.1em;
+    font-size: 1.4em;
 }
 .people .details {
+    font-size: 0.8em;
     color: #666;
 }
 
@@ -131,8 +130,13 @@ article,
 }
 
 article {
+    text-align: left;
+    display: inline-block;
+
+    margin-top: 10px;
+
     width: auto;
-    min-width: 400px;
+    min-width: 200px;
     max-width: 70ex;
     font-size: 1.2rem;
 
@@ -159,4 +163,44 @@ footer {
 footer p {
     margin: 0;
     padding: 0;
+}
+
+@media screen and (min-width: 500px) {
+
+article,
+.q-container {
+    border-radius: 15px;
+}
+.qinput {
+    border-radius: 2px;
+}
+
+.q-container {
+   margin-top: 100px;
+   padding: 0;
+   width: 400px;
+}
+.qinput {
+    margin: 10px 15px;
+    width: 370px;
+    font-size: 2rem;
+}
+.suggestions {
+    border-bottom-left-radius: 15px;
+    border-bottom-right-radius: 15px;
+}
+
+.people .name {
+    font-size: 1.1em;
+}
+
+.people .details {
+    font-size: 1rem;
+}
+
+article {
+    min-width: 400px;
+    margin-top: 100px;
+}
+
 }
