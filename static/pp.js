@@ -165,6 +165,12 @@
         fuzzy.populate(people);
         q.addEventListener('keyup', up, false);
 
+        window.setTimeout(function() {
+            // disable autocomplete again if it was enabled
+            // by a browser extension in the meantime
+            q.setAttribute('autocomplete', 'off');
+        }, 500);
+
         function updateSelectedElement( by ) {
             var l = lis.length;
 
