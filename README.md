@@ -1,5 +1,7 @@
 # pp (Web version)
 
+[![Dependency Status](https://gemnasium.com/bfontaine/web-pp.png)](https://gemnasium.com/bfontaine/web-pp)
+
 **web-pp** is a Web version of [alfred-pp][alfred-pp]. Check it [online][w].
 
 [alfred-pp]: https://github.com/bfontaine/alfred-pp
