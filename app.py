@@ -1,8 +1,9 @@
 # -*- coding: UTF-8 -*-
 
 import os
-from pp.store import redis
-from flask import Flask, Response, render_template, request
+from pp.store  import redis
+from pp.search import search_url
+from flask import Flask, Response, render_template, request, redirect, abort
 from flask.ext.assets import Environment, Bundle
 from flask.ext.misaka import Misaka
 from flask.ext.cache import Cache
@@ -60,3 +61,13 @@ def about():
 def people_json():
     resp = redis.get('people.json') or '[]'
     return Response(resp, 200, mimetype='application/json')
+
+@app.route('/search/url')
+def search():
+    """
+    server-side URL search
+    """
+    url = search_url(request.args['q'])
+    if url:
+        return redirect(url, code=303) # 303 = See Other
+    abort(404)
