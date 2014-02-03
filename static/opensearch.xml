@@ -6,5 +6,5 @@
 <AdultContent>false</AdultContent>
 <InputEncoding>UTF-8</InputEncoding>
 <OutputEncoding>UTF-8</OutputEncoding>
-<Url type="text/html" template="http://p7pp.herokuapp.com/search/url?q={searchTerms}"/>
+<Url type="text/html" template="https://p7pp.herokuapp.com/search/url?q={searchTerms}"/>
 </OpenSearchDescription>
