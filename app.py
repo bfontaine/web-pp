@@ -8,15 +8,7 @@ from flask.ext.assets import Environment, Bundle
 from flask.ext.misaka import Misaka
 from flask.ext.cache import Cache
 from htmlmin.minify import html_minify
-
-def iife(_in, out, **kw):
-    """
-    'iife' filter for webassets. It wraps a JS bundle in an IIFE, thus
-    preventing global leaks.
-    """
-    out.write(';!function(){')
-    out.write(_in.read())
-    out.write('}();')
+from webassets_iife import IIFE
 
 app = Flask(__name__)
 
@@ -32,11 +24,11 @@ assets = Environment(app)
 
 ### JS
 js = Bundle('mustache.min.js', 'mousetrap.js', 'pp.js', \
-        filters=(iife, 'closure_js'), output='pp.min.js')
+        filters=(IIFE, 'closure_js'), output='pp.min.js')
 assets.register('js_all', js)
 
 js = Bundle('text.js', \
-        filters=(iife, 'closure_js'), output='a.min.js')
+        filters=(IIFE, 'closure_js'), output='a.min.js')
 assets.register('js_articles', js)
 
 ### CSS
