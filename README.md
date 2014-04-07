@@ -1,7 +1,5 @@
 # pp (Web version)
 
-[![Dependency Status](https://gemnasium.com/bfontaine/web-pp.png)](https://gemnasium.com/bfontaine/web-pp)
-
 **web-pp** is a Web version of [alfred-pp][alfred-pp]. Check it [online][w].
 
 It does exactly the same thing: type a few letters of a Paris Diderot CS
