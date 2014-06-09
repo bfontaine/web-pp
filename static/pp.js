@@ -1,4 +1,6 @@
 (function() {
+    // Mustache & Mousetrap become local variables that can be renammed by the
+    // JS processor
     var Mustache  = window.Mustache,
         Mousetrap = window.Mousetrap,
         MAX_RESULTS = 8,
@@ -42,7 +44,7 @@
                 _people_count = 0, // people list count
                 _cache = {},       // regex cache for each name
                 _preloaded_icons = {};
-                
+
             function fuzzyCache( str ) {
                 var reg;
 
@@ -148,7 +150,7 @@
 
                 window.setTimeout(updateSelectedElement, 5);
             },
-        
+
             people = JSON.parse(data),
             q      = document.getElementById('q'),
             prev_q = '',
@@ -228,12 +230,12 @@
         }
 
         // keyboard shortcuts
-        Mousetrap.bind('up',   selectPreviousResult);
-        Mousetrap.bind('down', selectNextResult);
-        Mousetrap.bind('enter', function() { openResult(); });
-        Mousetrap.bind(['mod+enter', 'shift+enter'], function() {
-            openResult(true); });
-        Mousetrap.bind('tab', function( e ) {
+        Mousetrap.bind('up',   selectPreviousResult)
+                 .bind('down', selectNextResult)
+                 .bind('enter', function() { openResult(); })
+                 .bind(['mod+enter', 'shift+enter'], function() {
+                     openResult(true); })
+                 .bind('tab', function( e ) {
             if (document.activeElement == q) {
                 completeResult( e );
             }
