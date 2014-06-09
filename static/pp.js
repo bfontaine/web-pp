@@ -1,6 +1,6 @@
 (function() {
-    // Mustache & Mousetrap become local variables that can be renammed by the
-    // JS processor
+    // Mustache & Mousetrap become local variables that can be then be crushed
+    // by the JS processor
     var Mustache  = window.Mustache,
         Mousetrap = window.Mousetrap,
         MAX_RESULTS = 8,
@@ -104,37 +104,19 @@
             };
         })();
 
-    function ajax(opts) {
-        var xmlhttp = new XMLHttpRequest(),
-
-            mth  = opts.method || 'GET',
-            path = opts.path || '/',
-            cb   = opts.callback || function(){},
-            data = opts.data || null;
+    function ajax(path, callback) {
+        var xmlhttp = new XMLHttpRequest();
 
         xmlhttp.onreadystatechange = function() {
             if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-                cb(xmlhttp.responseText);
+                callback(xmlhttp.responseText);
             }
         }
-        xmlhttp.open(mth, path, true);
-
-        if (mth == 'POST') {
-            xmlhttp.setRequestHeader('Content-type',
-                                     'application/x-www-form-urlencoded');
-        }
-        xmlhttp.send(data);
+        xmlhttp.open('GET', path, true);
+        xmlhttp.send(null);
     }
 
-    // load people info
-    function loadPeopleJSON( cb ) {
-        ajax({
-            path: '/json',
-            callback: cb
-        });
-    }
-
-    loadPeopleJSON(function( data ) {
+    ajax('/json', function( data ) {
             updateSuggestions = function( query ) {
                 var fields = {};
 
