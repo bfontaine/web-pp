@@ -20,12 +20,8 @@ Requirements:
 * Redis
 
 ```sh
-# create a local environment
-virtualenv venv --distribute
-source venv/bin/activate
-
 # install dependencies
-pip install -r requirements.txt
+make deps
 ```
 
 Note: I use Redis because Heroku doesn’t support file storage. You can modify
@@ -47,4 +43,4 @@ make run
 ```
 
 And open your browser at `localhost:8000`. You’ll have to wait a few seconds
-the first time because the JS/CSS/HTML code will be minified.
+the first time because the JS/CSS/HTML code has to be minified.
