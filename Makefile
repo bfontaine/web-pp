@@ -11,7 +11,7 @@ all: run
 deps: $(VENV)
 	$(BINUTILS)/pip install -qr requirements.txt
 
-deploy:
+deploy: stylecheck
 	git push
 
 populate: deps
@@ -20,6 +20,9 @@ populate: deps
 run: deps
 	CLOSURE_COMPRESSOR_OPTIMIZATION=ADVANCED_OPTIMIZATIONS \
 	$(BINUTILS)/gunicorn app:app
+
+stylecheck: *.py deps
+	$(BINUTILS)/pep8 *.py pp/*.py
 
 $(VENV):
 	virtualenv $@

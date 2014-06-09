@@ -19,12 +19,14 @@ from unidecode import unidecode
 from urllib2 import urlopen, Request
 from urlparse import urljoin, urlparse
 
+
 def fmt_phone(ph):
     """
     Format a (French) phone number
     """
     ph = re.sub('^(\+?33\s(?:\(?0\)?))', '0', ph)
     return re.sub('(?<=\d)[-. ](?=\d)', '.', ph).strip()
+
 
 def fmt_name(n):
     """
@@ -33,11 +35,13 @@ def fmt_name(n):
     n = n.strip()
     return re.sub(u'([ÉÈËÊÑA-Z]{2,})', lambda m: m.group(1).capitalize(), n)
 
+
 def text(el):
     """
     Helper to get the text content of a BeautifulSoup item
     """
     return el.get_text().strip()
+
 
 def mk_fuzzy(p):
     """
@@ -60,6 +64,7 @@ def mk_fuzzy(p):
     # join with non-\w symbol to avoid cross-matching
     return ' # '.join(els)
 
+
 def soup_url(url):
     """
     Get an HTML document from an URL, and return its (beautiful) soup
@@ -67,6 +72,7 @@ def soup_url(url):
     req = Request(url, headers={'User-Agent': 'p7pp/web'})
     html = urlopen(req).read()
     return BeautifulSoup(html, "lxml")
+
 
 def mk_people_key(org, url):
     """
@@ -77,6 +83,7 @@ def mk_people_key(org, url):
     key = m.group(1) if m else re.sub(r'\W', '_', path)
     return "people.%s.%s" % (org, key)
 
+
 def parse_liafa():
     """
     Return a dict of people from LIAFA.
@@ -85,7 +92,7 @@ def parse_liafa():
     icon = 'liafa.png'
     people = {}
     base = 'http://www.liafa.univ-paris-diderot.fr/'
-    tr_sel = 'blockquote > table tr.fondgristresc' # td:first-child a'
+    tr_sel = 'blockquote > table tr.fondgristresc'  # td:first-child a'
     souper = soup_url(urljoin(base, '/web9/membreliafa/listalpha_fr.php'))
     for tr in souper.select(tr_sel):
         links = tr.select('td a')
@@ -93,14 +100,14 @@ def parse_liafa():
             continue
 
         u = links[0].get('href')
-        if u == None:
+        if u is None:
             continue
         p = {}
         tds = tr.select('td.texte')
         if len(tds) >= 2:
             p['info'] = ''
             office = text(tds[1])
-            phone  = text(tds[0])
+            phone = text(tds[0])
             if office and phone and (office != '-' or phone != '-'):
                 p['info'] = 'Office ' + office + ', phone: ' + fmt_phone(phone)
         souper = soup_url(base + u)
@@ -133,7 +140,7 @@ def parse_pps():
         if not link:
             continue
         p = {}
-        p['url']  = urljoin(base, link.get('href'))
+        p['url'] = urljoin(base, link.get('href'))
         p['name'] = fmt_name(text(link))
         p['fuzzy'] = mk_fuzzy(p)
         p['icon'] = icon
@@ -142,10 +149,10 @@ def parse_pps():
         if (len(tds) >= 4):
             p['info'] = ''
             office = text(tds[2])
-            phone  = text(tds[3])
+            phone = text(tds[3])
             if office and phone and (office != '-' or phone != '-'):
                 p['info'] = 'Office ' + office \
-                        + ', phone: ' + fmt_phone('01 45 27 ' + phone)
+                    + ', phone: ' + fmt_phone('01 45 27 ' + phone)
 
         people[mk_people_key('pps', p['url'])] = p
 
@@ -173,6 +180,7 @@ def parse_pps():
 
     return people
 
+
 def parse_gallium():
     """
     Return a dict of people from Gallium. Only a part of them are teaching
@@ -185,12 +193,13 @@ def parse_gallium():
     souper = soup_url(base + '/members.html')
     links = souper.select('#columnA_2columns a')
     for link in links:
-        p = { 'name': text(link), 'url': urljoin(base, link.get('href')) }
+        p = {'name': text(link), 'url': urljoin(base, link.get('href'))}
         p['icon'] = icon
         p['fuzzy'] = mk_fuzzy(p)
         people[mk_people_key('gallium', p['url'])] = p
 
     return people
+
 
 def parse_others():
     """
@@ -203,7 +212,8 @@ def parse_others():
         'info': 'Office 345, phone: 01.57.27.68.97',
     }
     p['fuzzy'] = mk_fuzzy(p)
-    return { 'pps.jmr': p }
+    return {'pps.jmr': p}
+
 
 def parse_all():
     pp = {}
@@ -216,6 +226,7 @@ def parse_all():
     for k in pp:
         pp[k]['id'] = k
     return pp
+
 
 def save_list():
     """
