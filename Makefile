@@ -3,18 +3,23 @@
 .DEFAULT: all
 .PHONY: all deploy populate run
 
-INITSHELL=source venv/bin/activate
+VENV=venv
+BINUTILS=$(VENV)/bin
 
-all: deploy
+all: run
+
+deps: $(VENV)
+	$(BINUTILS)/pip install -qr requirements.txt
 
 deploy:
 	git push
 
-populate:
-	$(INITSHELL); \
-	\python scheduler.py
+populate: deps
+	$(BINUTILS)/python scheduler.py
 
-run:
-	$(INITSHELL); \
+run: deps
 	CLOSURE_COMPRESSOR_OPTIMIZATION=ADVANCED_OPTIMIZATIONS \
-	gunicorn app:app
+	$(BINUTILS)/gunicorn app:app
+
+$(VENV):
+	virtualenv $@
