@@ -62,18 +62,27 @@ app.controller('suggsCtrl', ['$scope', '$http', function ($scope, $http) {
 
     $scope.$watch('results.length', checkCursor);
 
-    _scope = $scope;
-
     $scope.complete = eventListener(function(ev) {
-        $scope.query = selection().name;
+        var sel = selection();
+        if (sel) {
+            $scope.query = sel.name;
+        } else {
+            q.focus();
+        }
     });
 
     $scope.open = eventListener(function() {
-        document.location = selection().url;
+        var sel = selection();
+        if (sel) {
+            document.location = selection().url;
+        }
     });
 
     $scope.openNewTab = eventListener(function() {
-        window.open(selection().url, '_blank');
+        var sel = selection();
+        if (sel) {
+            window.open(selection().url, '_blank');
+        }
     });
 
     $scope.setCursor = function(c) {
