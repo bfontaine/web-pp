@@ -25,8 +25,8 @@ assets = Environment(app)
 js = Bundle('angular.min.js', 'mousetrap.js', 'wMousetrap.js', 'pp.js',
             # closure_js is too aggressive for our angular app, it renames
             # every Angular identifier (e.g. .controller, .config, .module). We
-            # fallback on the simpler jsmin.
-            filters=(IIFE, 'jsmin'), output='pp.min.js')
+            # fallback on the simpler yui_js
+            filters=(IIFE, 'yui_js'), output='pp.min.js')
 assets.register('js_all', js)
 
 js = Bundle('text.js',

@@ -15,7 +15,6 @@ django-htmlmin==0.6.3
 gunicorn==18.0
 html5lib==0.999
 itsdangerous==0.24
-jsmin==2.0.9
 lxml==3.3.1
 misaka==1.0.2
 newrelic==2.18.1.15
@@ -25,3 +24,4 @@ six==1.5.2
 webassets==0.9
 webassets-iife==0.1.0
 wsgiref==0.1.2
+yuicompressor==2.4.8
