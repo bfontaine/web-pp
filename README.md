@@ -33,7 +33,7 @@ Make sure you started `reddit-server`. Run the scheduler once to fetch people
 data:
 
 ```sh
-python2 scheduler.py
+venv/bin/python scheduler.py
 ```
 
 Then run the app:
