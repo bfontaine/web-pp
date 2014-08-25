@@ -16,7 +16,7 @@ Web page. Use up and down arrows to change the selected teacher.
 Requirements:
 
 * Python 2.7 (with virtualenv)
-* Java (to minify JS/CSS/HTML)
+* Java (to minify the JS/CSS/HTML code)
 * Redis
 
 ```sh
@@ -29,7 +29,7 @@ the code to use a static file and remove the Redis dependency if you prefer.
 
 ## Running
 
-Make sure you started `reddit-server`. Run the scheduler once to fetch people
+Make sure you started `redis-server`. Run the scheduler once to fetch people
 data:
 
 ```sh
