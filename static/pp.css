@@ -99,9 +99,6 @@ a.text {
 .people .name {
     overflow: hidden;
     text-overflow: ellipsis;
-}
-
-.people .name {
     font-size: 1.4em;
 }
 .people .details {

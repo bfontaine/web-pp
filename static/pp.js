@@ -1,246 +1,107 @@
-(function() {
-    // Mustache & Mousetrap become local variables that can be then be crushed
-    // by the JS processor
-    var Mustache  = window.Mustache,
-        Mousetrap = window.Mousetrap,
-        MAX_RESULTS = 8,
+var app = angular.module('pp', ['mgo-mousetrap']);
 
-        // will be optimized by the minifier
-        pp_tpl = "{{#people}}"
-               + '<li class="people-container" data-n="{{n}}">'
-                 + '<a href="{{{url}}}" class="people" data-id="{{id}}">'
-                   + '<img src="/static/icons/{{icon}}" class="icon" />'
-                     + '<p class="info"><b class="name">{{name}}</b>'
-                               + '<span class="details">{{info}}</span>'
-                     + '</p>'
-                   + '</a>'
-                 + '</li>'
-               + '{{/people}}',
+app.config(['$interpolateProvider', function($interpolateProvider) {
+  $interpolateProvider.startSymbol('_{')
+                      .endSymbol('}_');
+}]);
 
-        // minify++
-        document = window.document,
+app.controller('suggsCtrl', ['$scope', '$http', function ($scope, $http) {
+    // just to set the focus
+    var q = document.querySelector('input');
 
-        suggs = [],
-        suggs_cursor = -1,
-        suggs_root = document.getElementById('suggs'),
+    $scope.people = $scope.results = [];
+    $scope.query = '';
+    $scope.cursor = 0;
 
-        // dynamic array
-        lis = document.getElementsByTagName('li');
-
-    // pre-parse the template
-    Mustache.parse(pp_tpl);
-
-    var cleanQuery = function( str ) {
-            if (!str) { return str; }
-
-            return str.replace(/^\s+|\s+$/, '')  // trailing spaces
-                      .replace(/\s+/g, ' ')      // multiple spaces
-                      .replace(/[^'\w -]/g, ''); // special chars
-        },
-
-    // fuzzy matching
-        fuzzy = (function() {
-            var _people = [],      // people list
-                _people_count = 0, // people list count
-                _cache = {},       // regex cache for each name
-                _preloaded_icons = {};
-
-            function fuzzyCache( str ) {
-                var reg;
-
-                if (_cache.hasOwnProperty(str)) {
-                    return _cache[str];
-                }
-
-                return _cache[str] = new RegExp(str, 'i');
-            }
-
-            function addNumbers( ary ) {
-                var i, l=ary.length;
-                for (i=0; i<l; i++) {
-                    ary[i] && (ary[i]['n'] = i);
-                }
-
-                return ary;
-            }
-
-            return {
-                populate: function( people ) {
-                    var i, icon, img;
-                    _people = Object.keys(people).map(function(k) {
-                        return people[k];
-                    });
-                    _people_count = _people.length;
-
-                    // preload images
-                    for (i=0; i<_people_count; i++) {
-                        icon = _people[i]['icon'];
-                        if (_preloaded_icons[icon]) {
-                            continue;
-                        }
-                        img = new Image();
-                        img.src = '/static/icons/' + icon;
-                        _preloaded_icons[icon] = true;
-                    }
-                },
-
-                match: function( str ) {
-                    var results = [], cpt=0, i, p;
-
-                    reg = fuzzyCache( str );
-
-                    for (i=0; i<_people_count; i++) {
-                        p = _people[i];
-                        if (reg.test(p['fuzzy'] || p['name'])) {
-                            results.push(p);
-                            if (++cpt >= MAX_RESULTS) {
-                                break;
-                            }
-                        }
-                    }
-
-                    return suggs = addNumbers(results);
-                }
-            };
-        })();
-
-    function ajax(path, callback) {
-        var xmlhttp = new XMLHttpRequest();
-
-        xmlhttp.onreadystatechange = function() {
-            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-                callback(xmlhttp.responseText);
-            }
+    var _query_cache = {};
+    function query() {
+        if ($scope.query in _query_cache) {
+            return _query_cache[$scope.query];
         }
-        xmlhttp.open('GET', path, true);
-        xmlhttp.send(null);
+        return (_query_cache[$scope.query] = new RegExp(
+            $scope.query.replace(/^\s+|\s+$/, '')  // trailing spaces
+                        .replace(/\s+/g, ' ')      // multiple spaces
+                        .replace(/[^'\w -]/g, ''), // special chars
+            'i'));
     }
 
-    ajax('/json', function( data ) {
-            updateSuggestions = function( query ) {
-                var fields = {};
+    // filter
+    $scope.matches = function(p) {
+        return $scope.query && query().test(p.fuzzy || p.name);
+    };
 
-                query = cleanQuery( query );
+    // selection
 
-                // using this prevents the 'people' key from being crushed
-                // by Google Clojure Compiler
-                fields['people'] = query ? fuzzy.match(query) : [];
+    function eventListener(fn) {
+        var that = this;
+        return function(ev) {
+            ev.preventDefault();
+            return fn.call(that);
+        };
+    }
 
-                suggs_cursor = suggs.length ? 0 : -1;
+    function selection() {
+        return $scope.results[$scope.cursor];
+    }
 
-                suggs_root.innerHTML = Mustache.render(pp_tpl, fields);
-
-                window.setTimeout(updateSelectedElement, 5);
-            },
-
-            people = JSON.parse(data),
-            q      = document.getElementById('q'),
-            prev_q = '',
-            up     = function( e ) {
-                var query = q.value;
-                if (query != prev_q) {
-                    updateSuggestions(query ? query : null);
-                }
-                prev_q = query;
-            };
-
-        // init
-        q.focus()
-        fuzzy.populate(people);
-        q.addEventListener('keyup', up, false);
-
-        window.setTimeout(function() {
-            // disable autocomplete again if it was enabled
-            // by a browser extension in the meantime
-            q.setAttribute('autocomplete', 'off');
-        }, 500);
-
-        function updateSelectedElement( by ) {
-            var l = lis.length;
-
-            if (l == 0 || suggs_cursor < 0 || suggs_cursor >= l) {
-                return;
-            }
-
-            by = by || 0;
-
-            if (suggs_cursor + by < 0
-                || suggs_cursor + by >= l) { return; }
-
-            suggs_cursor += by;
-
-            // classList: IE 10+, iOS 5+, Android 3+, no Opera Mini
-
-            [].forEach.call(lis, function(li) {
-                li.classList.remove('selected');
-            });
-
-            lis[suggs_cursor].classList.add('selected');
-        }
-
-        function selectPreviousResult( e ) {
-            updateSelectedElement(-1);
-            e.preventDefault();
-            return false;
-        }
-        function selectNextResult( e ) {
-            updateSelectedElement(1);
-            e.preventDefault();
-            return false;
-        }
-        function openResult( newTab ) {
-            var li = lis[suggs_cursor], a, link;
-
-            if (!li) { return; }
-
-            a = li.childNodes[0];
-            if (!a) { return; }
-
-            link = a.getAttribute('href');
-
-            newTab ? window.open(link, '_blank') : document.location = link;
-        }
-        function completeResult( e ) {
-            var li = lis[suggs_cursor], name;
-
-            if ( li && (name = li.getElementsByClassName('name')[0]) ) {
-                q.value = name.textContent || name.innerText;
-            }
-
-            e.preventDefault();
-            return false;
-        }
-
-        // keyboard shortcuts
-        Mousetrap.bind('up',   selectPreviousResult)
-                 .bind('down', selectNextResult)
-                 .bind('enter', function() { openResult(); })
-                 .bind(['mod+enter', 'shift+enter'], function() {
-                     openResult(true); })
-                 .bind('tab', function( e ) {
-            if (document.activeElement == q) {
-                completeResult( e );
-            }
+    function go(step) {
+        return eventListener(function(ev) {
+            $scope.cursor += step;
+            checkCursor();
         });
+    }
 
-        suggs_root.addEventListener('mouseover', function( e ) {
-            var el = e.target || e.which, n;
+    $scope.goUp = go(-1);
+    $scope.goDown = go(1);
 
-            e.stopPropagation();
+    function checkCursor() {
+        var max = $scope.results.length - 1;
+        if ($scope.cursor < 0) { $scope.cursor = 0; }
+        else if ($scope.cursor > max) { $scope.cursor = max; }
+    }
 
-            while(!el.className || el.className.indexOf('people-container') == -1) {
-                el = el.parentElement;
+    $scope.$watch('results.length', checkCursor);
 
-                if (!el || el.tagName == 'body') { return; }
-            }
+    _scope = $scope;
 
-            n = +el.getAttribute('data-n');
-
-            if (!isNaN(n)) {
-                updateSelectedElement(n - suggs_cursor);
-            }
-
-        }, false);
+    $scope.complete = eventListener(function(ev) {
+        $scope.query = selection().name;
     });
 
-})();
+    $scope.open = eventListener(function() {
+        document.location = selection().url;
+    });
+
+    $scope.openNewTab = eventListener(function() {
+        window.open(selection().url, '_blank');
+    });
+
+    $scope.setCursor = function(c) {
+        $scope.cursor = c;
+        q.focus();
+    };
+
+    $http.get('/json').success(function(ppl) {
+        var preloaded_icons = {}, i, img;
+
+        for (var k in ppl) {
+            $scope.people.push(ppl[k]);
+
+            // preload icons
+            i = ppl[k].icon;
+
+            if (!(i in preloaded_icons)) {
+                img = new Image();
+                img.src = '/static/icons/' + (preloaded_icons[i] = i);
+            }
+        }
+    });
+
+    // DOM init
+    q.focus();
+    window.setTimeout(function() {
+        // disable autocomplete again if it was enabled
+        // by a browser extension in the meantime
+        q.setAttribute('autocomplete', 'off');
+    }, 500);
+}]);

@@ -17,15 +17,30 @@
         <link rel="dns-prefetch" href="www.pps.univ-paris-diderot.fr" />
         <link rel="dns-prefetch" href="http://gallium.inria.fr" />
     </head>
-    <body class="app">
+    <body class="app" ng-app="pp">
 
         <!-- for Facebook -->
         <img style="display:none" src="/static/icons/app.png" />
-    
-        <div class="q-container">
-            <input type="text" id="q"
+
+        <div class="q-container" ng-controller="suggsCtrl"
+             w-mousetrap="{up:goUp, down:goDown, tab:complete,
+                           enter:open,'shift+enter':openNewTab,
+                           'mod+enter':openNewTab}">
+            <input type="text" ng-model="query"
                 class="qinput mousetrap" autocomplete="off" />
-            <ul id="suggs" class="suggestions"></ul>
+            <ul class="suggestions">
+              <li class="people-container"
+                  ng-repeat="p in (results=(people|filter:matches|limitTo:8))"
+                  ng-mouseover="setCursor($index)"
+                  ng-class="{selected: $index==cursor}">
+                <a href="_{p.url}_" class="people" data-id="_{p.id}_">
+                  <img ng-src="/static/icons/_{p.icon}_" class="icon" />
+                  <p class="info"><b class="name">_{p.name}_</b>
+                                  <span class="details">_{p.info}_</span>
+                  </p>
+                </a>
+              </li>
+            </ul>
         </div>
 
         <footer>
