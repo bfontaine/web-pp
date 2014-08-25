@@ -1,6 +1,5 @@
 # -*- coding: UTF-8 -*-
 
-import os
 from pp.store import redis
 from pp.search import search_url
 from flask import Flask, Response, render_template, request, redirect, abort
@@ -23,8 +22,11 @@ cache = Cache(app)
 assets = Environment(app)
 
 # - JS
-js = Bundle('mustache.min.js', 'mousetrap.js', 'pp.js',
-            filters=(IIFE, 'closure_js'), output='pp.min.js')
+js = Bundle('angular.min.js', 'mousetrap.js', 'wMousetrap.js', 'pp.js',
+            # closure_js is too aggressive for our angular app, it renames
+            # every Angular identifier (e.g. .controller, .config, .module). We
+            # fallback on the simpler jsmin.
+            filters=(IIFE, 'jsmin'), output='pp.min.js')
 assets.register('js_all', js)
 
 js = Bundle('text.js',
