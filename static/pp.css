@@ -162,6 +162,14 @@ footer p {
     padding: 0;
 }
 
+/* Angular */
+.suggestions.ng-cloak {
+  visibility: hidden;
+}
+.suggestions.ng-cloak li {
+  display: none;
+}
+
 @media screen and (min-width: 500px) {
 
 article,
