@@ -27,6 +27,11 @@ make deps
 Note: I use Redis because Heroku doesn’t support file storage. You can modify
 the code to use a static file and remove the Redis dependency if you prefer.
 
+Optional requirements:
+
+* `optipng`
+* `pngcrush`
+
 ## Running
 
 Make sure you started `redis-server`. Run the scheduler once to fetch people

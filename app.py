@@ -34,7 +34,7 @@ js = Bundle('text.js',
 assets.register('js_articles', js)
 
 # - CSS
-css = Bundle('normalize.css', 'pp.css',
+css = Bundle('normalize.css', 'icons.css', 'pp.css',
              filters=('cssmin',), output='pp.min.css')
 assets.register('css_all', css)
 
