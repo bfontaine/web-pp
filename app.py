@@ -49,14 +49,14 @@ def index():
     return html_minify(html)
 
 
-@cache.cached(timeout=43200)  # 12 hours
+@cache.cached(timeout=86400)  # 24 hours
 @app.route('/about')
 def about():
     html = render_template('about.html')
     return html_minify(html)
 
 
-@cache.cached(timeout=3600)  # 1 hour
+@cache.cached(timeout=7200)  # 2 hours
 @app.route('/json')
 def people_json():
     resp = redis.get('people.json') or '[]'
