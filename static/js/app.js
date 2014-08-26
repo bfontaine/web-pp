@@ -99,8 +99,6 @@ app.controller('suggsCtrl', ['$scope', '$http', function ($scope, $http) {
     };
 
     $http.get('/json').success(function(ppl) {
-        var preloaded_icons = {}, i, img;
-
         for (var k in ppl) {
             $scope.people.push(ppl[k]);
         }
