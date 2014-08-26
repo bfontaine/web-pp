@@ -7,8 +7,8 @@ __pycache__
 venv
 static/people.json
 dump.rdb
-/static/pp.css
-/static/pp.js
+/static/*.css
+/static/*.js
 *.min.css
 *.min.js
 .webassets-cache

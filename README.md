@@ -36,7 +36,7 @@ Optional requirements:
 Make sure you started `redis-server`. Run the scheduler once to fetch people
 data:
 
-    venv/bin/python scheduler.py
+    make populate
 
 And compile the sprites:
 

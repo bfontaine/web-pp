@@ -11,7 +11,6 @@ people.json.
 """
 
 import re
-import os
 import json
 from store import redis
 from bs4 import BeautifulSoup
@@ -89,7 +88,7 @@ def parse_liafa():
     Return a dict of people from LIAFA.
     """
     print "parsing LIAFA..."
-    icon = 'liafa.png'
+    icon = 'liafa'
     people = {}
     base = 'http://www.liafa.univ-paris-diderot.fr/'
     tr_sel = 'blockquote > table tr.fondgristresc'  # td:first-child a'
@@ -129,7 +128,7 @@ def parse_pps():
     Return a dict of people from PPS
     """
     print "parsing PPS..."
-    icon = 'pps.png'
+    icon = 'pps'
     people = {}
     base = 'http://www.pps.univ-paris-diderot.fr'
     souper = soup_url(base + '/membres')
@@ -187,7 +186,7 @@ def parse_gallium():
     at Paris Diderot.
     """
     print "parsing Gallium..."
-    icon = 'inria.png'
+    icon = 'inria'
     people = {}
     base = 'http://gallium.inria.fr'
     souper = soup_url(base + '/members.html')
@@ -208,7 +207,7 @@ def parse_others():
     p = {
         'name': 'Jean-Marie Rifflet',
         'url': 'http://www.pps.univ-paris-diderot.fr/~jmr/',
-        'icon': 'pps.png',
+        'icon': 'pps',
         'info': 'Office 345, phone: 01.57.27.68.97',
     }
     p['fuzzy'] = mk_fuzzy(p)

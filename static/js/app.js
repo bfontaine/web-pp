@@ -21,7 +21,14 @@ app.controller('suggsCtrl', ['$scope', '$http', function ($scope, $http) {
         return (_query_cache[$scope.query] = new RegExp(
             $scope.query.replace(/^\s+|\s+$/, '')  // trailing spaces
                         .replace(/\s+/g, ' ')      // multiple spaces
-                        .replace(/[^'\w -]/g, ''), // special chars
+                      //.replace(/[^'\w -]/g, '')  // special chars
+                        // accents
+                        .replace(/a/g, '[aâäà]')
+                        .replace(/e/g, '[eêëéè]')
+                        .replace(/i/g, '[iîï]')
+                        .replace(/o/g, '[oôö]')
+                        .replace(/u/g, '[uûüù]')
+                        .replace(/c/g, '[cç]'),
             'i'));
     }
 
@@ -35,8 +42,9 @@ app.controller('suggsCtrl', ['$scope', '$http', function ($scope, $http) {
     function eventListener(fn) {
         var that = this;
         return function(ev) {
+            var args = [].slice.call(arguments);
             ev.preventDefault();
-            return fn.call(that);
+            return fn.apply(that, args);
         };
     }
 
@@ -71,19 +79,17 @@ app.controller('suggsCtrl', ['$scope', '$http', function ($scope, $http) {
         }
     });
 
-    $scope.open = eventListener(function() {
+    $scope.open = eventListener(function(_, newTab) {
         var sel = selection();
         if (sel) {
-            document.location = selection().url;
+            if (newTab === true) {
+                window.open(selection().url, '_blank');
+            } else {
+                document.location = selection().url;
+            }
         }
     });
-
-    $scope.openNewTab = eventListener(function() {
-        var sel = selection();
-        if (sel) {
-            window.open(selection().url, '_blank');
-        }
-    });
+    $scope.openNewTab = function(e) { $scope.open(e, true); };
 
     $scope.setCursor = function(c) {
         $scope.cursor = c;
@@ -95,14 +101,6 @@ app.controller('suggsCtrl', ['$scope', '$http', function ($scope, $http) {
 
         for (var k in ppl) {
             $scope.people.push(ppl[k]);
-
-            // preload icons
-            i = ppl[k].icon;
-
-            if (!(i in preloaded_icons)) {
-                img = new Image();
-                img.src = '/static/imgs/icons/' + (preloaded_icons[i] = i);
-            }
         }
     });
 
@@ -113,4 +111,7 @@ app.controller('suggsCtrl', ['$scope', '$http', function ($scope, $http) {
         // by a browser extension in the meantime
         q.setAttribute('autocomplete', 'off');
     }, 500);
+
+    // preload the sprites
+    new Image().src = '/static/imgs/icons.png';
 }]);

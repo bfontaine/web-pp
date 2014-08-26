@@ -34,7 +34,7 @@
                   ng-mouseover="setCursor($index)"
                   ng-class="{selected: $index==cursor}">
                 <a href="_{p.url}_" class="people" data-id="_{p.id}_">
-                  <img ng-src="/static/imgs/icons/_{p.icon}_" class="icon" />
+                  <div class="icon i-_{p.icon}_"></div>
                   <p class="info"><b class="name">_{p.name}_</b>
                                   <span class="details">_{p.info}_</span>
                   </p>
