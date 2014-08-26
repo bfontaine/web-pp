@@ -6,7 +6,7 @@ It does exactly the same thing: type a few letters of a Paris Diderot CS
 teacher’s name, and it’ll suggest you a few names. Press enter to go on their
 Web page. Use up and down arrows to change the selected teacher.
 
-![screenshot](https://raw.github.com/bfontaine/web-pp/master/static/screenshot.png)
+![screenshot](https://raw.github.com/bfontaine/web-pp/master/static/imgs/screenshot.png)
 
 [alfred-pp]: https://github.com/bfontaine/alfred-pp
 [w]: https://p7pp.herokuapp.com/
