@@ -7,8 +7,8 @@
         {% assets "css_all" %}
         <link rel="stylesheet" href="{{ ASSET_URL }}" />
         {% endassets %}
-        <link rel="icon" type="image/png" href="/static/icons/app.png" />
-        <link rel="apple-touch-icon"      href="/static/icons/app.png" />
+        <link rel="icon" type="image/png" href="/static/imgs/app.png" />
+        <link rel="apple-touch-icon"      href="/static/imgs/app.png" />
         <link rel="search" type="application/opensearchdescription+xml"
               title="P7PP" href="/static/opensearch.xml">
         <meta name="author"   content="Baptiste Fontaine" />
@@ -20,7 +20,7 @@
     <body class="app" ng-app="pp">
 
         <!-- for Facebook -->
-        <img style="display:none" src="/static/icons/app.png" />
+        <img style="display:none" src="/static/imgs/app.png" />
 
         <div class="q-container" ng-controller="suggsCtrl"
              w-mousetrap="{up:goUp, down:goDown, tab:complete,
@@ -34,7 +34,7 @@
                   ng-mouseover="setCursor($index)"
                   ng-class="{selected: $index==cursor}">
                 <a href="_{p.url}_" class="people" data-id="_{p.id}_">
-                  <img ng-src="/static/icons/_{p.icon}_" class="icon" />
+                  <img ng-src="/static/imgs/icons/_{p.icon}_" class="icon" />
                   <p class="info"><b class="name">_{p.name}_</b>
                                   <span class="details">_{p.info}_</span>
                   </p>

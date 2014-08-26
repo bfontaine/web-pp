@@ -22,20 +22,23 @@ cache = Cache(app)
 assets = Environment(app)
 
 # - JS
-js = Bundle('angular.min.js', 'mousetrap.js', 'wMousetrap.js', 'pp.js',
+js = Bundle('js/angular.min.js',
+            'js/mousetrap.js',
+            'js/wMousetrap.js',
+            'js/app.js',
             # closure_js is too aggressive for our angular app, it renames
             # every Angular identifier (e.g. .controller, .config, .module). We
             # fallback on the simpler yui_js
-            filters=(IIFE, 'yui_js'), output='pp.min.js')
+            filters=(IIFE, 'yui_js'), output='pp.js')
 assets.register('js_all', js)
 
-js = Bundle('text.js',
-            filters=(IIFE, 'closure_js'), output='a.min.js')
+js = Bundle('js/text.js',
+            filters=(IIFE, 'closure_js'), output='t.js')
 assets.register('js_articles', js)
 
 # - CSS
-css = Bundle('normalize.css', 'icons.css', 'pp.css',
-             filters=('cssmin',), output='pp.min.css')
+css = Bundle('css/normalize.css', 'css/icons.css', 'css/app.css',
+             filters=('cssmin',), output='pp.css')
 assets.register('css_all', css)
 
 

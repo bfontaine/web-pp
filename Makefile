@@ -29,11 +29,11 @@ $(VENV):
 
 # development
 
-sprites: static/icons.png
+sprites: static/imgs/icons.png
 
-static/icons.png: static/icons/*.png
+static/imgs/icons.png: static/imgs/icons/*.png
 	$(BINUTILS)/glue -qf --namespace i --sprite-namespace '' \
-		static/icons static
+		static/imgs/icons static/imgs
 	@# don't fail if we don't have optipng/pngcrush
 	which optipng >/dev/null && optipng -o2 -quiet -strip all $@ || exit 0
 	which pngcrush >/dev/null && pngcrush -brute -ow -q $@ || exit 0

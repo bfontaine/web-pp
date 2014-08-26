@@ -101,7 +101,7 @@ app.controller('suggsCtrl', ['$scope', '$http', function ($scope, $http) {
 
             if (!(i in preloaded_icons)) {
                 img = new Image();
-                img.src = '/static/icons/' + (preloaded_icons[i] = i);
+                img.src = '/static/imgs/icons/' + (preloaded_icons[i] = i);
             }
         }
     });
