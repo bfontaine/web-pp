@@ -1,8 +1,9 @@
-﻿/* glue: 0.9.4 hash: 2283dda404 */
+﻿/* glue: 0.9.4 hash: 54b297c890 */
         .i-inria,
 .i-pps,
-.i-liafa {
-            background-image: url('/static/imgs/icons.png');
+.i-liafa,
+.i-app {
+            background-image: url('icons.png');
             background-repeat: no-repeat;
         }
         
@@ -24,14 +25,21 @@
             height: 54px;
         }
         
+        .i-app {
+            background-position: -200px 0;
+            width: 54px;
+            height: 54px;
+        }
+        
         @media screen and (-webkit-min-device-pixel-ratio: 1.0), screen and (min--moz-device-pixel-ratio: 1.0), screen and (-o-min-device-pixel-ratio: 100/100), screen and (min-device-pixel-ratio: 1.0), screen and (min-resolution: 1.0dppx) {
             .i-inria,
     .i-pps,
-    .i-liafa {
-                background-image: url('/static/imgs/icons.png');
-                -webkit-background-size: 200px 152px;
-                -moz-background-size: 200px 152px;
-                background-size: 200px 152px;
+    .i-liafa,
+    .i-app {
+                background-image: url('icons.png');
+                -webkit-background-size: 254px 152px;
+                -moz-background-size: 254px 152px;
+                background-size: 254px 152px;
             }
         }
         

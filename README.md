@@ -19,10 +19,9 @@ Requirements:
 * Java (to minify the JS/CSS/HTML code)
 * Redis
 
-```sh
-# install dependencies
-make deps
-```
+Install Python dependencies:
+
+    make deps
 
 Note: I use Redis because Heroku doesn’t support file storage. You can modify
 the code to use a static file and remove the Redis dependency if you prefer.
@@ -37,15 +36,15 @@ Optional requirements:
 Make sure you started `redis-server`. Run the scheduler once to fetch people
 data:
 
-```sh
-venv/bin/python scheduler.py
-```
+    venv/bin/python scheduler.py
+
+And compile the sprites:
+
+    make -B sprites
 
 Then run the app:
 
-```sh
-make run
-```
+    make run
 
 And open your browser at `localhost:8000`. You’ll have to wait a few seconds
 the first time because the JS/CSS/HTML code has to be minified.

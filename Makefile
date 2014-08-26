@@ -33,7 +33,9 @@ sprites: static/imgs/icons.png
 
 static/imgs/icons.png: static/imgs/icons/*.png
 	$(BINUTILS)/glue -qf --namespace i --sprite-namespace '' \
-		static/imgs/icons static/imgs
+		static/imgs/icons \
+		-u '/static/imgs/' \
+		--img static/imgs --css static/css
 	@# don't fail if we don't have optipng/pngcrush
 	which optipng >/dev/null && optipng -o2 -quiet -strip all $@ || exit 0
 	which pngcrush >/dev/null && pngcrush -brute -ow -q $@ || exit 0
