@@ -1,8 +1,8 @@
 var app = angular.module('pp', ['mgo-mousetrap']);
 
 app.config(['$interpolateProvider', function($interpolateProvider) {
-  $interpolateProvider.startSymbol('_{')
-                      .endSymbol('}_');
+  $interpolateProvider.startSymbol('[')
+                      .endSymbol(']');
 }]);
 
 app.controller('suggsCtrl', ['$scope', '$http', function ($scope, $http) {
@@ -22,6 +22,8 @@ app.controller('suggsCtrl', ['$scope', '$http', function ($scope, $http) {
             $scope.query.replace(/^\s+|\s+$/, '')  // trailing spaces
                         .replace(/\s+/g, ' ')      // multiple spaces
                       //.replace(/[^'\w -]/g, '')  // special chars
+                        // special regex chars
+                        .replace(/([\.\[(){])/, '\\$1')
                         // accents
                         .replace(/a/g, '[aâäà]')
                         .replace(/e/g, '[eêëéè]')

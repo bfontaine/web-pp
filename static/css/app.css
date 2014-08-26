@@ -5,10 +5,10 @@
 }
 
 /* theme */
-body         { background-color: #1E2F41 }
+body     { background-color: #1E2F41 }
 article,
-.q-container { background-color: #7FA39C }
-.suggestions { background-color: #F0E9D6 }
+.r       { background-color: #7FA39C }
+.s       { background-color: #F0E9D6 }
 /* /theme */
 
 html, body {
@@ -32,7 +32,7 @@ a.text {
     text-decoration: inherit;
 }
 
-.q-container {
+.r {
     text-align: left;
     display: inline-block;
     margin: 0;
@@ -40,7 +40,7 @@ a.text {
     width: 100%;
 }
 
-.qinput {
+.q {
     margin: 0;
     width: 100%;
     font-size: 3rem;
@@ -51,71 +51,71 @@ a.text {
     outline: none;
 }
 
-.suggestions {
+.s {
     list-style-type: none;
     margin: 0;
     padding: 10px 0;
     z-index: 1000;
 }
 
-.suggestions li {
+.s li {
     padding: 0 10px 0 15px;
     height: 56px;
 }
 
-.suggestions:empty {
+.s:empty {
     visibility: hidden;
 }
 
-.people {
+.p {
     display: block;
     color: inherit;
     text-decoration: inherit;
     height: 100%;
 }
 
-.people .icon {
+.p .i {
     max-width: 50px;
     max-height: 50px;
     margin: 3px 10px 0 0;
     vertical-align: middle;
 }
 
-.people .icon,
-.people .info {
+.p .i,
+.p .m {
     display: inline-block;
 }
 
-.people .name,
-.people .details {
+.p .n,
+.p .d {
     display: block;
     max-width: 300px;
 }
 
-.people,
-.people .name {
+.p,
+.p .n {
     white-space: nowrap;
 }
-.people .name {
+.p .n {
     overflow: hidden;
     text-overflow: ellipsis;
     font-size: 1.4em;
 }
-.people .details {
+.p .d {
     font-size: 0.8em;
     color: #666;
 }
 
-.people .info {
+.p .m {
     margin: 0;
     padding-top: 6px;
     vertical-align: top;
 }
 
-.suggestions .selected {
+.s .selected {
     background-color: #B8C6B9;
 }
-.suggestions .selected .details {
+.s .selected .d {
     color: #444;
 }
 
@@ -163,43 +163,41 @@ footer p {
 }
 
 /* Angular */
-.suggestions.ng-cloak {
+.s.ng-cloak {
   visibility: hidden;
 }
-.suggestions.ng-cloak li {
+.s.ng-cloak li, .no {
   display: none;
 }
 
 @media screen and (min-width: 500px) {
 
 article,
-.q-container {
+.r {
     border-radius: 15px;
 }
-.qinput {
+.q {
     border-radius: 2px;
-}
-
-.q-container {
-   margin-top: 100px;
-   padding: 0;
-   width: 400px;
-}
-.qinput {
     margin: 10px 15px;
     width: 370px;
     font-size: 2rem;
 }
-.suggestions {
+
+.r {
+   margin-top: 100px;
+   padding: 0;
+   width: 400px;
+}
+.s {
     border-bottom-left-radius: 15px;
     border-bottom-right-radius: 15px;
 }
 
-.people .name {
+.p .n {
     font-size: 1.1em;
 }
 
-.people .details {
+.p .d {
     font-size: 1rem;
 }
 

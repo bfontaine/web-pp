@@ -20,23 +20,34 @@
     <body class="app" ng-app="pp">
 
         <!-- for Facebook -->
-        <img style="display:none" src="/static/imgs/app.png" />
+        <img class="no" src="/static/imgs/app.png" />
 
-        <div class="q-container" ng-controller="suggsCtrl"
-             w-mousetrap="{up:goUp, down:goDown, tab:complete,
+        <!--
+          Minification:
+            r: input container ([r]oot)
+            q: [q]uery input
+            s: [s]uggestions
+            p: [p]eople
+               i: [i]con
+               m: [m]ore info
+                  n: [n]ame
+                  d: [d]etails
+        -->
+
+        <div class="r" ng-controller="suggsCtrl"
+             w-mousetrap="{up:goUp,down:goDown,tab:complete,
                            enter:open,'shift+enter':openNewTab,
                            'mod+enter':openNewTab}">
             <input type="text" ng-model="query"
-                class="qinput mousetrap" autocomplete="off" />
-            <ul class="suggestions ng-cloak">
-              <li class="people-container"
-                  ng-repeat="p in (results=(people|filter:matches|limitTo:8))"
+                class="q mousetrap" autocomplete="off" />
+            <ul class="s ng-cloak">
+              <li ng-repeat="p in (results=(people|filter:matches|limitTo:8))"
                   ng-mouseover="setCursor($index)"
-                  ng-class="{selected: $index==cursor}">
-                <a href="_{p.url}_" class="people" data-id="_{p.id}_">
-                  <div class="icon i-_{p.icon}_"></div>
-                  <p class="info"><b class="name">_{p.name}_</b>
-                                  <span class="details">_{p.info}_</span>
+                  ng-class="{selected:$index==cursor}">
+                <a href="[p.url]" class="p" data-id="[p.id]">
+                  <div class="i i-[p.icon]"></div>
+                  <p class="m"><b class="n">[p.name]</b>
+                               <span class="d">[p.info]</span>
                   </p>
                 </a>
               </li>
