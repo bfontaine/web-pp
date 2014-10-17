@@ -204,14 +204,7 @@ def parse_others():
     """
     Return a dict of manually-added people
     """
-    p = {
-        'name': 'Jean-Marie Rifflet',
-        'url': 'http://www.pps.univ-paris-diderot.fr/~jmr/',
-        'icon': 'pps',
-        'info': 'Office 345, phone: 01.57.27.68.97',
-    }
-    p['fuzzy'] = mk_fuzzy(p)
-    return {'pps.jmr': p}
+    return {}
 
 
 def parse_all():
