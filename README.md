@@ -48,3 +48,25 @@ Then run the app:
 
 And open your browser at `localhost:8000`. You’ll have to wait a few seconds
 the first time because the JS/CSS/HTML code has to be minified.
+
+## Other Usages
+
+### From the terminal
+
+You can use `pp` from the terminal:
+
+```sh
+# In your ~/.bashrc
+
+# You need to export `BROWSER` somewhere in your `~/.bashrc`. For example, in
+# Ubuntu:
+#   export BROWSER=xdg-open
+# or in OSX:
+#   export BROWSER=open
+# or directly use your favorite browser:
+#   export BROWSER=firefox
+
+p7pp() {
+    $BROWSER "https://p7pp.herokuapp.com/search/url?q=$*"
+}
+```
