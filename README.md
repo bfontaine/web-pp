@@ -70,3 +70,9 @@ p7pp() {
     $BROWSER "https://p7pp.herokuapp.com/search/url?q=$*"
 }
 ```
+
+Use it:
+
+```
+$ p7pp jby
+```
